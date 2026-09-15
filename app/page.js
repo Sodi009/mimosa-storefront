@@ -16,20 +16,45 @@ export default async function HomePage() {
       <section className="hero">
         <div className="hero-copy">
           <p className="kicker">Mimosa BKK Collection</p>
-          <h1>Considered pieces, made to last.</h1>
+          <h1>Your BKK wardrobe awaits in Dubai.</h1>
           <p>
-            Sourced and packed in Bangkok, shipped with care. Browse the collection, add
-            what you like to your bag, and send us your order on WhatsApp — we'll confirm
-            and arrange payment from there.
+            Curated finds sourced and packed in Bangkok, delivered straight to your door
+            in Dubai. Add what you like to your bag, send your order on WhatsApp, and
+            we'll confirm stock before you pay.
           </p>
           <a href="/collections/all" className="btn-primary">
             Shop the collection
           </a>
         </div>
         <div className="hero-image">
-          {products[0]?.featuredImage && (
-            <img src={products[0].featuredImage.url} alt={products[0].featuredImage.altText || ""} />
-          )}
+          <div className="hero-image-inner">
+            {products[0]?.featuredImage && (
+              <img src={products[0].featuredImage.url} alt={products[0].featuredImage.altText || ""} />
+            )}
+          </div>
+        </div>
+      </section>
+
+      <section className="how-it-works">
+        <div className="how-step">
+          <span className="how-step-num">01</span>
+          <p className="how-step-title">Browse &amp; add to bag</p>
+          <p className="how-step-desc">Pick what you like from the collection below.</p>
+        </div>
+        <div className="how-step">
+          <span className="how-step-num">02</span>
+          <p className="how-step-title">Send on WhatsApp</p>
+          <p className="how-step-desc">Your bag becomes a message — just hit send.</p>
+        </div>
+        <div className="how-step">
+          <span className="how-step-num">03</span>
+          <p className="how-step-title">Confirm &amp; pay</p>
+          <p className="how-step-desc">We confirm stock, then arrange bank transfer.</p>
+        </div>
+        <div className="how-step">
+          <span className="how-step-num">04</span>
+          <p className="how-step-title">Delivered in Dubai</p>
+          <p className="how-step-desc">Track your order anytime on our tracking page.</p>
         </div>
       </section>
 

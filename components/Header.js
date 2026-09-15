@@ -1,26 +1,15 @@
-"use client";
-
-import Link from "next/link";
-import { useCart } from "@/lib/cart-context";
-
-export default function Header() {
-  const { cart, openCart } = useCart();
-  const count = cart?.totalQuantity || 0;
-
+export default function Footer() {
   return (
-    <header className="site-header">
-      <div className="site-header-inner">
-        <Link href="/" className="brand-mark">
-          MIMOSA
-        </Link>
-        <nav className="header-nav">
-          <Link href="/collections/all">Shop</Link>
-          <Link href="/collections/new">New In</Link>
-        </nav>
-        <button className="cart-toggle" onClick={openCart}>
-          Bag {count > 0 ? `(${count})` : ""}
-        </button>
-      </div>
-    </header>
+    <footer className="site-footer wrap">
+      <span>© {new Date().getFullYear()} Mimosa BKK</span>
+      
+      <a href="https://www.facebook.com/people/Mimosa-BKK-Collection/61571651470942/"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        Facebook
+      </a>
+      <span>Bangkok → Dubai</span>
+    </footer>
   );
 }
