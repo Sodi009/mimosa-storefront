@@ -585,7 +585,23 @@ button {
   color: var(--muted);
   font-size: 13px;
   display: flex;
+  align-items: center;
   justify-content: space-between;
+}
+
+.footer-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.footer-social {
+  display: flex;
+  color: var(--muted);
+}
+
+.footer-social:hover {
+  color: var(--brass);
 }
 
 /* ---------- Track order ---------- */

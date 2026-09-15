@@ -1,15 +1,31 @@
-export default function Footer() {
+"use client";
+
+import Link from "next/link";
+import { useCart } from "@/lib/cart-context";
+
+export default function Header() {
+  const { cart, openCart } = useCart();
+  const count = cart?.totalQuantity || 0;
+
   return (
-    <footer className="site-footer wrap">
-      <span>© {new Date().getFullYear()} Mimosa BKK</span>
-      
-      <a href="https://www.facebook.com/people/Mimosa-BKK-Collection/61571651470942/"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        Facebook
-      </a>
-      <span>Bangkok → Dubai</span>
-    </footer>
+    <header className="site-header">
+      <div className="site-header-inner">
+        <Link href="/" className="brand-lockup">
+          <img src="/icon.jpg" alt="" className="brand-icon" />
+          <span className="brand-text">
+            <span className="brand-name">MIMOSA</span>
+            <span className="brand-sub">BKK Collection</span>
+          </span>
+        </Link>
+        <nav className="header-nav">
+          <Link href="/collections/all">Shop</Link>
+          <Link href="/collections/new">New In</Link>
+          <Link href="/track">Track Order</Link>
+        </nav>
+        <button className="cart-toggle" onClick={openCart}>
+          Bag {count > 0 ? `(${count})` : ""}
+        </button>
+      </div>
+    </header>
   );
 }
