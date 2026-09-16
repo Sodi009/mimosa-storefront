@@ -234,19 +234,6 @@ button {
   aspect-ratio: 4 / 5;
   background: var(--line);
   border-radius: 2px;
-  overflow: visible;
-}
-
-.hero-image::before {
-  content: "";
-  position: absolute;
-  top: -28px;
-  right: -28px;
-  width: 130px;
-  height: 130px;
-  border: 1px solid var(--ink);
-  border-radius: 50%;
-  opacity: 0.16;
 }
 
 .hero-image-inner {
