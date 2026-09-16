@@ -798,6 +798,22 @@ button {
   justify-content: space-between;
 }
 
+@media (max-width: 600px) {
+  .site-footer {
+    padding: 20px 0;
+    font-size: 12px;
+  }
+
+  .footer-social-group {
+    gap: 12px;
+  }
+
+  .footer-social svg {
+    width: 20px;
+    height: 20px;
+  }
+}
+
 .footer-social-group {
   display: flex;
   align-items: center;
