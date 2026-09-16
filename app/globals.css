@@ -349,7 +349,8 @@ button {
     padding: 40px 0;
   }
   .hero-image {
-    order: -1;
+    max-width: 320px;
+    margin: 0 auto;
   }
 }
 
@@ -673,6 +674,11 @@ button {
   .pdp {
     grid-template-columns: 1fr;
   }
+
+  .pdp-gallery {
+    max-width: 320px;
+    margin: 0 auto;
+  }
 }
 
 .pdp-gallery-main {
@@ -691,6 +697,19 @@ button {
 .pdp-thumbs {
   display: flex;
   gap: 8px;
+  overflow-x: auto;
+  scroll-snap-type: x proximity;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: 4px;
+}
+
+.pdp-thumbs::-webkit-scrollbar {
+  height: 4px;
+}
+
+.pdp-thumbs::-webkit-scrollbar-thumb {
+  background: var(--line);
+  border-radius: 999px;
 }
 
 .pdp-thumb {
@@ -699,6 +718,8 @@ button {
   background: none;
   line-height: 0;
   opacity: 0.65;
+  flex-shrink: 0;
+  scroll-snap-align: start;
   transition: border-color 0.2s ease, opacity 0.2s ease;
 }
 

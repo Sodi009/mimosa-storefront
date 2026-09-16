@@ -16,7 +16,7 @@ export default function ProductGallery({ images, title, variantImageUrl }) {
   }, [variantImageUrl, images]);
 
   return (
-    <div>
+    <div className="pdp-gallery">
       <div className="pdp-gallery-main">
         {active && <img src={active.url} alt={active.altText || title} />}
       </div>
