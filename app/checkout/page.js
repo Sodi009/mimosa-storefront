@@ -79,6 +79,11 @@ export default function CheckoutPage() {
       return;
     }
 
+    // Open the tab synchronously, right on the click, before any async work —
+    // otherwise browsers (Safari especially) silently block window.open() once
+    // it happens after an await, since it's no longer tied to the user gesture.
+    const whatsappWindow = window.open("", "_blank");
+
     setSubmitting(true);
 
     const fulfillment =
@@ -130,7 +135,14 @@ export default function CheckoutPage() {
       orderId: result.success ? result.no : null,
     });
     setSubmitting(false);
-    window.open(url, "_blank", "noopener,noreferrer");
+
+    if (whatsappWindow) {
+      whatsappWindow.location.href = url;
+    } else {
+      // Popup was blocked even for the synchronous open — fall back to
+      // navigating the current tab so the order still reaches WhatsApp.
+      window.location.href = url;
+    }
   }
 
   return (
