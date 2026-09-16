@@ -303,8 +303,10 @@ button {
 
 .tiktok-embed-wrap {
   display: flex;
+  flex-wrap: wrap;
   justify-content: center;
-  padding-bottom: 40px;
+  gap: 20px;
+  padding: 40px 0;
   min-height: 100px;
 }
 
