@@ -1,10 +1,13 @@
 import { Suspense } from "react";
+import { GoogleAnalytics } from "@next/third-parties/google";
 import "./globals.css";
 import { CartProvider } from "@/lib/cart-context";
 import AnnouncementBar from "@/components/AnnouncementBar";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import CartDrawer from "@/components/CartDrawer";
+
+const GA_MEASUREMENT_ID = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
 
 export const metadata = {
   title: "Mimosa BKK",
@@ -35,6 +38,7 @@ export default function RootLayout({ children }) {
           <CartDrawer />
         </CartProvider>
       </body>
+      {GA_MEASUREMENT_ID && <GoogleAnalytics gaId={GA_MEASUREMENT_ID} />}
     </html>
   );
 }
