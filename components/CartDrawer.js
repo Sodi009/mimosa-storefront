@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect } from "react";
+import Link from "next/link";
 import { useCart } from "@/lib/cart-context";
-import { getWhatsAppCheckoutUrl } from "@/lib/whatsapp";
 
 function formatMoney(amount, currencyCode) {
   return new Intl.NumberFormat("en-US", {
@@ -13,8 +13,6 @@ function formatMoney(amount, currencyCode) {
 
 export default function CartDrawer() {
   const { lines, isOpen, closeCart, updateQuantity, removeItem, subtotal, currencyCode } = useCart();
-
-  const checkoutUrl = getWhatsAppCheckoutUrl(lines, subtotal, currencyCode);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -99,16 +97,11 @@ export default function CartDrawer() {
               <span>Subtotal</span>
               <span>{formatMoney(subtotal, currencyCode)}</span>
             </div>
-            <a
-              href={checkoutUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="checkout-btn"
-            >
-              Order via WhatsApp
-            </a>
+            <Link href="/checkout" className="checkout-btn" onClick={closeCart}>
+              Checkout
+            </Link>
             <p style={{ fontSize: 12, color: "var(--muted)", marginTop: 10, textAlign: "center" }}>
-              We'll confirm availability on WhatsApp, then send bank transfer details.
+              Choose pickup or delivery, then send your order on WhatsApp.
             </p>
           </div>
         )}
