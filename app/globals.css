@@ -469,6 +469,20 @@ button {
   color: var(--muted);
 }
 
+/* ---------- Facebook reviews embed ---------- */
+
+.fb-reviews-embed {
+  max-width: 500px;
+  margin: 0 auto 64px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.fb-reviews-embed iframe {
+  display: block;
+}
+
 /* ---------- Product detail ---------- */
 
 .pdp {
