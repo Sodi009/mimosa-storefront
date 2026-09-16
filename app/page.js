@@ -130,24 +130,6 @@ export default async function HomePage() {
           ))}
         </div>
       )}
-
-      <div className="section-head">
-        <h2>What customers say</h2>
-      </div>
-      <div className="fb-reviews-embed">
-        <iframe
-          title="Mimosa BKK reviews on Facebook"
-          src={`https://www.facebook.com/plugins/page.php?href=${encodeURIComponent(
-            "https://www.facebook.com/people/Mimosa-BKK-Collection/61571651470942/"
-          )}&tabs=reviews&width=500&height=700&small_header=false&adapt_container_width=true&hide_cover=true&show_facepile=false`}
-          width="100%"
-          height="700"
-          style={{ border: "none", overflow: "hidden" }}
-          scrolling="no"
-          allowFullScreen
-          allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
-        />
-      </div>
     </main>
   );
 }
