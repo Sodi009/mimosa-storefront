@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import { useCart } from "@/lib/cart-context";
 import { formatPriceRange } from "@/lib/price";
+import { getMinimumQuantity } from "@/lib/product-rules";
 import ProductGallery from "./ProductGallery";
 
 function variantMatchesSelection(variant, selected) {
@@ -14,6 +15,7 @@ export default function ProductDetail({ product }) {
   const images = product.images.edges.map((e) => e.node);
   const variants = product.variants.edges.map((e) => e.node);
   const hasRealOptions = product.options.some((o) => o.name !== "Title" && o.values.length > 1);
+  const minimumQuantity = getMinimumQuantity(product.handle);
 
   const [selected, setSelected] = useState(() => {
     const initial = {};
@@ -60,6 +62,11 @@ export default function ProductDetail({ product }) {
         <p className="pdp-price">
           {formatPriceRange(product.priceRange.minVariantPrice, product.priceRange.maxVariantPrice)}
         </p>
+        {minimumQuantity > 1 && (
+          <p className="pdp-min-qty">
+            Minimum order: {minimumQuantity} items — mix any size or design.
+          </p>
+        )}
         {product.description && <p className="pdp-description">{product.description}</p>}
 
         {hasRealOptions &&

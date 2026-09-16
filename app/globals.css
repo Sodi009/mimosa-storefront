@@ -698,6 +698,13 @@ button {
   max-width: 46ch;
 }
 
+.pdp-min-qty {
+  color: var(--sage);
+  font-size: 13px;
+  font-weight: 600;
+  margin: 0 0 16px;
+}
+
 .option-group {
   margin-bottom: 22px;
 }
@@ -1046,6 +1053,16 @@ button {
   border: 1px solid var(--line);
   border-radius: 4px;
   padding: 20px;
+}
+
+.checkout-min-qty-notice {
+  margin: 12px 0 0;
+  padding: 10px 12px;
+  background: #f6f0df;
+  border: 1px solid #ddcd9f;
+  border-radius: 2px;
+  color: #7a6524;
+  font-size: 12px;
 }
 
 /* ---------- Track order ---------- */

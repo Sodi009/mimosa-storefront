@@ -32,6 +32,13 @@ const CATEGORIES = [
       <path d="M12 2v4M12 18v4M4.9 4.9l2.8 2.8M16.3 16.3l2.8 2.8M2 12h4M18 12h4M4.9 19.1l2.8-2.8M16.3 7.7l2.8-2.8" />
     ),
   },
+  {
+    name: "Innerwear",
+    handle: "innerwear",
+    icon: (
+      <path d="M12 21s-7.5-4.6-10-9.3C.5 8 2.4 4 6.4 4c2 0 3.6 1.2 4.6 2.8C12 5.2 13.6 4 15.6 4c4 0 5.9 4 4.4 7.7-2.5 4.7-10 9.3-10 9.3Z" />
+    ),
+  },
 ];
 
 const TESTIMONIALS = [

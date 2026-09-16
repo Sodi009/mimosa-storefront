@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useCart } from "@/lib/cart-context";
 import { getWhatsAppCheckoutUrl } from "@/lib/whatsapp";
 import { submitOrderToSheet } from "@/lib/orders";
+import { findUnmetMinimums } from "@/lib/product-rules";
 
 // Matches the exact list in the Admin panel's area dropdown, so orders placed on the
 // website land in the same buckets the area/insights charts already group by.
@@ -66,9 +67,20 @@ export default function CheckoutPage() {
     );
   }
 
+  const unmetMinimums = findUnmetMinimums(lines);
+
   async function handleSubmit(e) {
     e.preventDefault();
     setError(null);
+
+    const unmet = findUnmetMinimums(lines);
+    if (unmet.length > 0) {
+      const first = unmet[0];
+      setError(
+        `${first.productTitle} needs at least ${first.required} in your bag (any size/design) — you have ${first.have}.`
+      );
+      return;
+    }
 
     if (!name.trim() || !phone.trim()) {
       setError("Please enter your name and phone number.");
@@ -309,6 +321,11 @@ export default function CheckoutPage() {
             <span>Total</span>
             <span>{formatMoney(subtotal, currencyCode)}</span>
           </div>
+          {unmetMinimums.map((u) => (
+            <p className="checkout-min-qty-notice" key={u.handle}>
+              Add {u.required - u.have} more {u.productTitle} to reach the minimum of {u.required}.
+            </p>
+          ))}
         </div>
       </div>
     </main>

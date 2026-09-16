@@ -8,6 +8,7 @@ const FILTER_CATEGORIES = [
   { name: "Clothes", handle: "clothes" },
   { name: "Shoes", handle: "shoes" },
   { name: "Accessories", handle: "accessories" },
+  { name: "Innerwear", handle: "innerwear" },
 ];
 
 export default async function CollectionPage({ params }) {
