@@ -59,10 +59,23 @@ export default function CartDrawer() {
                 {line.image && <img src={line.image} alt={line.productTitle} />}
               </div>
               <div style={{ flex: 1 }}>
-                <p className="cart-line-title">{line.productTitle}</p>
-                {line.variantTitle && line.variantTitle !== "Default Title" && (
-                  <p className="cart-line-variant">{line.variantTitle}</p>
-                )}
+                <div className="cart-line-top">
+                  <div>
+                    <p className="cart-line-title">{line.productTitle}</p>
+                    {line.variantTitle && line.variantTitle !== "Default Title" && (
+                      <p className="cart-line-variant">{line.variantTitle}</p>
+                    )}
+                  </div>
+                  <button
+                    className="remove-line"
+                    onClick={() => removeItem(line.variantId)}
+                    aria-label="Remove item"
+                  >
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M4 6h16M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2m2 0-1 14a1 1 0 0 1-1 1H8a1 1 0 0 1-1-1L6 6h12Z" />
+                    </svg>
+                  </button>
+                </div>
                 <div className="cart-line-controls">
                   <button className="qty-btn" onClick={() => updateQuantity(line.variantId, line.quantity - 1)}>
                     −
@@ -75,9 +88,6 @@ export default function CartDrawer() {
                     {formatMoney(line.price * line.quantity, line.currencyCode)}
                   </span>
                 </div>
-                <button className="remove-line" onClick={() => removeItem(line.variantId)} style={{ marginTop: 8 }}>
-                  Remove
-                </button>
               </div>
             </div>
           ))}

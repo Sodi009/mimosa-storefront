@@ -712,14 +712,30 @@ button {
   border-color: var(--brass);
 }
 
+.cart-line-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+}
+
 .remove-line {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  margin: -4px -6px 0 0;
+  border: none;
+  border-radius: 999px;
+  background: none;
   color: var(--muted);
-  font-size: 12px;
-  border-bottom: 1px solid var(--line);
-  transition: color 0.2s ease;
+  transition: background 0.2s ease, color 0.2s ease;
 }
 
 .remove-line:hover {
+  background: #f6e9e9;
   color: #a13b3b;
 }
 
