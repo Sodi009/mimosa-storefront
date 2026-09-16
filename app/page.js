@@ -57,6 +57,30 @@ const TESTIMONIALS = [
     name: "Dar Dar Soe",
     text: "ပစ္စည်းမှန် ဈေးတန်သော online shop page လေးပါ။",
   },
+  {
+    name: "Aung Kyaw Myint",
+    text: "ယုံကြည်စိတ်ချရတဲ့ page လေးပါ။ ပစ္စည်းအရည်အသွေးကောင်း စျေးနှုန်းချိုသာပါတယ်။",
+  },
+  {
+    name: "Thet Phoo Wai",
+    text: "page ကတင်သမျှ အကုန်ကြိုက်တယ်။ ဒီထက်မက အောင်မြင်ပါစေ 🤎",
+  },
+  {
+    name: "Myint Mo Oo",
+    text: "ဈေးမှန်ပြီး quality ရှိတဲ့ အိတ်တွေတစ်စုထုရနိုင်မယ့် page မှန်ကန်စိတ်ချရပါတယ်ရှင့် ❤️",
+  },
+  {
+    name: "Moe Phyu Phyu Zaw",
+    text: "Customer service ကောင်းပြီး Quality လည်း စိတ်ချရတဲ့ page လေး ဒီထက်မက အောင်မြင်ပါစေ ❤️",
+  },
+  {
+    name: "April May",
+    text: "ပစ္စည်းမှန် ဈေးတန်တဲ့အပြင် Quality လဲ ပြောစရာမလိုတဲ့ ဆိုင်လေးမို့ ယုံကြည်ပြီး ဝယ်လို့ရပါတယ်နော် 🥰",
+  },
+  {
+    name: "Ngwe Lwin Soe",
+    text: "တင်မျှရောင်းသမျှ အကုန်ရောင်းထွက်ပါစေ။ ပစ္စည်းလေးတွေမြင်ရတာ စိတ်ကျေနပ်ဖြစ်ပါတယ်။",
+  },
 ];
 
 export default async function HomePage() {
