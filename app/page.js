@@ -1,3 +1,4 @@
+import Script from "next/script";
 import { getProducts } from "@/lib/shopify";
 import ProductCard from "@/components/ProductCard";
 
@@ -92,6 +93,33 @@ export default async function HomePage() {
           </div>
         </div>
       </section>
+
+      <div className="section-head">
+        <h2>Follow us on TikTok</h2>
+        <a href="https://www.tiktok.com/@mimosa1872" target="_blank" rel="noopener noreferrer">
+          @mimosa1872
+        </a>
+      </div>
+      <div className="tiktok-embed-wrap">
+        <blockquote
+          className="tiktok-embed"
+          cite="https://www.tiktok.com/@mimosa1872"
+          data-unique-id="mimosa1872"
+          data-embed-type="creator"
+          style={{ maxWidth: 780, minWidth: 288 }}
+        >
+          <section>
+            <a
+              target="_blank"
+              href="https://www.tiktok.com/@mimosa1872?refer=creator_embed"
+              rel="noopener noreferrer"
+            >
+              @mimosa1872
+            </a>
+          </section>
+        </blockquote>
+      </div>
+      <Script async src="https://www.tiktok.com/embed.js" strategy="lazyOnload" />
 
       <div className="section-head">
         <h2>Shop by category</h2>

@@ -299,6 +299,15 @@ button {
   }
 }
 
+/* ---------- TikTok embed ---------- */
+
+.tiktok-embed-wrap {
+  display: flex;
+  justify-content: center;
+  padding-bottom: 40px;
+  min-height: 100px;
+}
+
 /* ---------- Category grid ---------- */
 
 .category-grid {
