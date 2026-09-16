@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const TRACKING_API_URL = process.env.NEXT_PUBLIC_TRACKING_API_URL;
 
@@ -79,6 +79,23 @@ export default function TrackPage() {
   const itemNames = order?.item ? order.item.toString().split(", ") : [];
   const itemPrices = order?.price ? order.price.toString().split(", ") : [];
 
+  function closeResult() {
+    setOrder(null);
+  }
+
+  useEffect(() => {
+    if (!order) return;
+    document.body.style.overflow = "hidden";
+    const onKeyDown = (e) => {
+      if (e.key === "Escape") closeResult();
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => {
+      document.body.style.overflow = "";
+      window.removeEventListener("keydown", onKeyDown);
+    };
+  }, [order]);
+
   return (
     <main className="wrap track-page">
       <div className="section-head" style={{ paddingBottom: 8 }}>
@@ -104,85 +121,91 @@ export default function TrackPage() {
       {error && <p className="track-error">{error}</p>}
 
       {order && (
-        <div className="track-result">
-          <div className="track-result-head">
-            <div>
-              <p className="track-order-id">Order #{order.no}</p>
-              <p className="track-order-name">{order.name}</p>
-            </div>
-          </div>
-
-          {isCancelled && (
-            <div className="track-banner track-banner-cancel">
-              <strong>Order cancelled</strong>
-              <span>This order has been cancelled.</span>
-            </div>
-          )}
-
-          {isPending && (
-            <div className="track-banner track-banner-pending">
-              <strong>Please wait</strong>
-              <span>Your order is pending confirmation. Check back soon!</span>
-            </div>
-          )}
-
-          {isConfirmed && (
-            <div className="track-banner track-banner-confirmed">
-              <strong>Order confirmed</strong>
-              <span>Your order is confirmed! We'll prepare it soon.</span>
-            </div>
-          )}
-
-          {activeStage === "Out For delivery" && (
-            <div className="track-banner track-banner-out">
-              <strong>Out for delivery</strong>
-              <span>Courier is on the way.</span>
-              
-                              
-              <a href="https://wa.me/971504036705"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="track-wa-link"
-              >
-                Contact courier
-              </a>
-            </div>
-          )}
-
-          {showStepper && (
-            <>
-              <ul className="track-stepper">
-                {STAGES.map((stage, i) => (
-                  <li
-                    key={stage}
-                    className={`track-step ${i <= activeIndex ? "active" : ""}`}
-                  >
-                    <span className="track-step-dot" />
-                    <span className="track-step-label">{STAGE_LABELS[stage]}</span>
-                  </li>
-                ))}
-              </ul>
-
-              <div className="track-item-card">
-                {itemNames.map((name, i) => (
-                  <div className="track-item-row" key={i}>
-                    <span>{name.split(" (x")[0]}</span>
-                    <span>{formatMoney(itemPrices[i] || 0)} AED</span>
-                  </div>
-                ))}
-                <div className="track-item-row track-item-total">
-                  <span>Total</span>
-                  <span>{formatMoney(order.amount)} AED</span>
-                </div>
-                <div className="track-item-row track-item-payment">
-                  <span>Payment</span>
-                  <span className={isCOD ? "track-cod" : "track-paid"}>
-                    {isCOD ? "COD" : "Paid"}
-                  </span>
+        <div className="track-modal-overlay" onClick={closeResult}>
+          <div className="track-modal" onClick={(e) => e.stopPropagation()}>
+            <button className="track-modal-close" onClick={closeResult} aria-label="Close">
+              ×
+            </button>
+            <div className="track-result">
+              <div className="track-result-head">
+                <div>
+                  <p className="track-order-id">Order #{order.no}</p>
+                  <p className="track-order-name">{order.name}</p>
                 </div>
               </div>
-            </>
-          )}
+
+              {isCancelled && (
+                <div className="track-banner track-banner-cancel">
+                  <strong>Order cancelled</strong>
+                  <span>This order has been cancelled.</span>
+                </div>
+              )}
+
+              {isPending && (
+                <div className="track-banner track-banner-pending">
+                  <strong>Please wait</strong>
+                  <span>Your order is pending confirmation. Check back soon!</span>
+                </div>
+              )}
+
+              {isConfirmed && (
+                <div className="track-banner track-banner-confirmed">
+                  <strong>Order confirmed</strong>
+                  <span>Your order is confirmed! We'll prepare it soon.</span>
+                </div>
+              )}
+
+              {activeStage === "Out For delivery" && (
+                <div className="track-banner track-banner-out">
+                  <strong>Out for delivery</strong>
+                  <span>Courier is on the way.</span>
+                  <a
+                    href="https://wa.me/971504036705"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="track-wa-link"
+                  >
+                    Contact courier
+                  </a>
+                </div>
+              )}
+
+              {showStepper && (
+                <>
+                  <ul className="track-stepper">
+                    {STAGES.map((stage, i) => (
+                      <li
+                        key={stage}
+                        className={`track-step ${i <= activeIndex ? "active" : ""}`}
+                      >
+                        <span className="track-step-dot" />
+                        <span className="track-step-label">{STAGE_LABELS[stage]}</span>
+                      </li>
+                    ))}
+                  </ul>
+
+                  <div className="track-item-card">
+                    {itemNames.map((name, i) => (
+                      <div className="track-item-row" key={i}>
+                        <span>{name.split(" (x")[0]}</span>
+                        <span>{formatMoney(itemPrices[i] || 0)} AED</span>
+                      </div>
+                    ))}
+                    <div className="track-item-row track-item-total">
+                      <span>Total</span>
+                      <span>{formatMoney(order.amount)} AED</span>
+                    </div>
+                    <div className="track-item-row track-item-payment">
+                      <span>Payment</span>
+                      <span className={isCOD ? "track-cod" : "track-paid"}>
+                        {isCOD ? "COD" : "Paid"}
+                      </span>
+                    </div>
+                  </div>
+                </>
+              )}
+            </div>
+          </div>
         </div>
       )}
     </main>
