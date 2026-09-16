@@ -64,6 +64,20 @@ button {
   padding: 0 24px;
 }
 
+/* ---------- Announcement bar ---------- */
+
+.announcement-bar {
+  background: var(--ink);
+}
+
+.announcement-bar p {
+  margin: 0;
+  padding: 10px 24px;
+  text-align: center;
+  font-size: 13px;
+  color: var(--bg);
+}
+
 /* ---------- Header ---------- */
 
 .site-header {

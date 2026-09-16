@@ -1,5 +1,7 @@
 import "./globals.css";
 import { CartProvider } from "@/lib/cart-context";
+import { getAnnouncement } from "@/lib/announcement";
+import AnnouncementBar from "@/components/AnnouncementBar";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import CartDrawer from "@/components/CartDrawer";
@@ -9,7 +11,9 @@ export const metadata = {
   description: "Mimosa BKK Collection — considered pieces, made to last.",
 };
 
-export default function RootLayout({ children }) {
+export default async function RootLayout({ children }) {
+  const announcement = await getAnnouncement();
+
   return (
     <html lang="en">
       <head>
@@ -22,6 +26,7 @@ export default function RootLayout({ children }) {
       </head>
       <body>
         <CartProvider>
+          <AnnouncementBar message={announcement} />
           <Header />
           {children}
           <Footer />
