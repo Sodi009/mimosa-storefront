@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect } from "react";
 import { useCart } from "@/lib/cart-context";
 import { getWhatsAppCheckoutUrl } from "@/lib/whatsapp";
 
@@ -14,6 +15,19 @@ export default function CartDrawer() {
   const { lines, isOpen, closeCart, updateQuantity, removeItem, subtotal, currencyCode } = useCart();
 
   const checkoutUrl = getWhatsAppCheckoutUrl(lines, subtotal, currencyCode);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    document.body.style.overflow = "hidden";
+    const onKeyDown = (e) => {
+      if (e.key === "Escape") closeCart();
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => {
+      document.body.style.overflow = "";
+      window.removeEventListener("keydown", onKeyDown);
+    };
+  }, [isOpen, closeCart]);
 
   return (
     <>

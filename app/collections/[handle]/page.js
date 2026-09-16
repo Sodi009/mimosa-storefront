@@ -9,6 +9,9 @@ export default async function CollectionPage({ params }) {
   if (handle === "all") {
     title = "All products";
     products = await getProducts({ first: 48 });
+  } else if (handle === "new") {
+    title = "New in";
+    products = await getProducts({ first: 24 });
   } else if (CATEGORY_KEYWORDS[handle]) {
     title = handle.charAt(0).toUpperCase() + handle.slice(1);
     products = await getProductsByCategory(handle);
