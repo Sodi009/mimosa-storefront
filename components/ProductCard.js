@@ -1,14 +1,9 @@
 import Link from "next/link";
-
-function formatPrice(amount, currencyCode) {
-  return new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: currencyCode,
-  }).format(amount);
-}
+import { formatPriceRange } from "@/lib/price";
 
 export default function ProductCard({ product }) {
-  const price = product.priceRange?.minVariantPrice;
+  const min = product.priceRange?.minVariantPrice;
+  const max = product.priceRange?.maxVariantPrice;
   return (
     <Link href={`/products/${product.handle}`} className="product-card">
       <div className="product-card-image">
@@ -23,9 +18,7 @@ export default function ProductCard({ product }) {
       <div className="product-card-body">
         <p className="product-card-title">{product.title}</p>
         {product.availableForSale ? (
-          <p className="product-card-price">
-            {price ? formatPrice(price.amount, price.currencyCode) : ""}
-          </p>
+          <p className="product-card-price">{formatPriceRange(min, max)}</p>
         ) : (
           <p className="sold-out-tag">Sold out</p>
         )}
