@@ -119,7 +119,10 @@ export default function CheckoutPage() {
           (landmark ? ` (near ${landmark})` : "") +
           ` — Phone: ${fulfillment.phone}`;
 
-    const result = await submitOrderToSheet({
+    // Save to the sheet in the background — WhatsApp shouldn't wait on that
+    // network round-trip, it can take a couple of seconds. The order still
+    // gets saved either way; it just won't have its ID in the WhatsApp text.
+    submitOrderToSheet({
       name: fulfillment.name,
       item: itemStr,
       price: priceStr,
@@ -128,12 +131,9 @@ export default function CheckoutPage() {
       payment: payment === "cod" ? "CASH ON DELIVERY" : "PAID ONLINE",
       area: type === "delivery" ? area : "",
       address: addressLine,
-    });
+    }).catch((err) => console.error("Order save failed:", err));
 
-    const url = getWhatsAppCheckoutUrl(lines, subtotal, currencyCode, {
-      ...fulfillment,
-      orderId: result.success ? result.no : null,
-    });
+    const url = getWhatsAppCheckoutUrl(lines, subtotal, currencyCode, fulfillment);
     setSubmitting(false);
 
     if (whatsappWindow) {
