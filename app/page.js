@@ -161,7 +161,7 @@ export default async function HomePage() {
       <div className="section-head">
         <h2>What customers say</h2>
         <a
-          href="https://www.facebook.com/people/Mimosa-BKK-Collection/61571651470942/reviews"
+          href="https://www.facebook.com/people/Mimosa-BKK-Collection/61571651470942/"
           target="_blank"
           rel="noopener noreferrer"
         >
