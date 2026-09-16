@@ -20,7 +20,7 @@ const CATEGORIES = [
     ),
   },
   {
-    name: "Innerwear",
+    name: "Innerwears",
     handle: "innerwear",
     icon: (
       <path d="M12 21s-7.5-4.6-10-9.3C.5 8 2.4 4 6.4 4c2 0 3.6 1.2 4.6 2.8C12 5.2 13.6 4 15.6 4c4 0 5.9 4 4.4 7.7-2.5 4.7-10 9.3-10 9.3Z" />

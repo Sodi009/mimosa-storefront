@@ -6,7 +6,7 @@ const FILTER_CATEGORIES = [
   { name: "New In", handle: "new" },
   { name: "Bags", handle: "bags" },
   { name: "Clothes", handle: "clothes" },
-  { name: "Innerwear", handle: "innerwear" },
+  { name: "Innerwears", handle: "innerwear" },
   { name: "Shoes", handle: "shoes" },
   { name: "Accessories", handle: "accessories" },
 ];
@@ -23,7 +23,8 @@ export default async function CollectionPage({ params }) {
     title = "New in";
     products = await getProducts({ first: 24 });
   } else if (CATEGORY_KEYWORDS[handle]) {
-    title = handle.charAt(0).toUpperCase() + handle.slice(1);
+    title = FILTER_CATEGORIES.find((cat) => cat.handle === handle)?.name
+      || handle.charAt(0).toUpperCase() + handle.slice(1);
     products = await getProductsByCategory(handle);
   } else {
     const collection = await getCollectionByHandle(handle, { first: 48 });
