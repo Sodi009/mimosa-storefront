@@ -93,18 +93,6 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <div className="tiktok-embed-wrap">
-        <video
-          className="tiktok-loop-video"
-          src="/videos/mimosa-tiktok-1.mp4"
-          autoPlay
-          muted
-          loop
-          playsInline
-          controls
-        />
-      </div>
-
       <div className="section-head">
         <h2>Shop by category</h2>
       </div>

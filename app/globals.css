@@ -299,23 +299,6 @@ button {
   }
 }
 
-/* ---------- TikTok embed ---------- */
-
-.tiktok-embed-wrap {
-  display: flex;
-  justify-content: center;
-  padding: 40px 0;
-}
-
-.tiktok-loop-video {
-  width: 100%;
-  max-width: 325px;
-  aspect-ratio: 9 / 16;
-  border-radius: 8px;
-  background: var(--line);
-  object-fit: cover;
-}
-
 /* ---------- Category grid ---------- */
 
 .category-grid {
