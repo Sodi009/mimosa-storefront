@@ -32,6 +32,33 @@ const CATEGORIES = [
   },
 ];
 
+const TESTIMONIALS = [
+  {
+    name: "Htet Htet Wai",
+    text: "Honestly, I really recommend this page. I'm so happy with the products I received — everything was packed nicely, the quality is really good, and the products are exactly as shown. The seller is also very kind and helpful, and I really appreciate how they answered my questions and helped me choose the right products. I'll definitely order again.",
+  },
+  {
+    name: "Elizabeth Bennet",
+    text: "Quality is the best and price is affordable. Highly recommend this page.",
+  },
+  {
+    name: "Min Khant Naing",
+    text: "Fair price. Good customer service.",
+  },
+  {
+    name: "War War Hlaing",
+    text: "ဒီထက်ပိုပြီး အောင်မြင်ပါစေရှင့်။ ပို့စ်တင်တိုင်း ဝင်ကြည့်ဖြစ်တယ်။ အိတ်တွေရဲ့ quality ကို အရမ်းကြိုက်တယ်🤍",
+  },
+  {
+    name: "Wai Lwin Soe",
+    text: "Quality ကောင်း၊ ဝန်ဆောင်မှုကောင်း၊ ယုံကြည်စိတ်ချရသော ဈေးနှုန်းတန်သော page လေး အောင်မြင်ပါစေ။",
+  },
+  {
+    name: "Dar Dar Soe",
+    text: "ပစ္စည်းမှန် ဈေးတန်သော online shop page လေးပါ။",
+  },
+];
+
 export default async function HomePage() {
   let products = [];
   let configError = null;
@@ -130,6 +157,26 @@ export default async function HomePage() {
           ))}
         </div>
       )}
+
+      <div className="section-head">
+        <h2>What customers say</h2>
+        <a
+          href="https://www.facebook.com/people/Mimosa-BKK-Collection/61571651470942/reviews"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          See all on Facebook
+        </a>
+      </div>
+      <div className="testimonial-grid">
+        {TESTIMONIALS.map((t) => (
+          <div className="testimonial-card" key={t.name}>
+            <div className="testimonial-stars">★★★★★</div>
+            <p className="testimonial-text">{t.text}</p>
+            <p className="testimonial-name">— {t.name}</p>
+          </div>
+        ))}
+      </div>
     </main>
   );
 }
