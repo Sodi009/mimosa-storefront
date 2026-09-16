@@ -1,5 +1,7 @@
 import { getProducts } from "@/lib/shopify";
+import { getReviews } from "@/lib/reviews";
 import ProductCard from "@/components/ProductCard";
+import TestimonialsSection from "@/components/TestimonialsSection";
 
 const CATEGORIES = [
   {
@@ -92,6 +94,9 @@ export default async function HomePage() {
   } catch (err) {
     configError = err.message;
   }
+
+  const submittedReviews = await getReviews();
+  const allReviews = [...submittedReviews, ...TESTIMONIALS];
 
   return (
     <main className="wrap">
@@ -192,15 +197,7 @@ export default async function HomePage() {
           See all on Facebook
         </a>
       </div>
-      <div className="testimonial-grid">
-        {TESTIMONIALS.map((t) => (
-          <div className="testimonial-card" key={t.name}>
-            <div className="testimonial-stars">★★★★★</div>
-            <p className="testimonial-text">{t.text}</p>
-            <p className="testimonial-name">— {t.name}</p>
-          </div>
-        ))}
-      </div>
+      <TestimonialsSection initialReviews={allReviews} />
     </main>
   );
 }
