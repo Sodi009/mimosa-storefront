@@ -1,7 +1,5 @@
 import { getProductByHandle } from "@/lib/shopify";
-import { formatPriceRange } from "@/lib/price";
-import AddToCartButton from "@/components/AddToCartButton";
-import ProductGallery from "@/components/ProductGallery";
+import ProductDetail from "@/components/ProductDetail";
 
 export default async function ProductPage({ params }) {
   const { handle } = await params;
@@ -15,20 +13,10 @@ export default async function ProductPage({ params }) {
     );
   }
 
-  const images = product.images.edges.map((e) => e.node);
-  const { minVariantPrice, maxVariantPrice } = product.priceRange;
-
   return (
     <main className="wrap">
       <div className="pdp">
-        <ProductGallery images={images} title={product.title} />
-
-        <div className="pdp-info">
-          <h1>{product.title}</h1>
-          <p className="pdp-price">{formatPriceRange(minVariantPrice, maxVariantPrice)}</p>
-          {product.description && <p className="pdp-description">{product.description}</p>}
-          <AddToCartButton product={product} />
-        </div>
+        <ProductDetail product={product} />
       </div>
     </main>
   );

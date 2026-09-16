@@ -1,10 +1,19 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-export default function ProductGallery({ images, title }) {
+export default function ProductGallery({ images, title, variantImageUrl }) {
   const [activeIndex, setActiveIndex] = useState(0);
   const active = images[activeIndex];
+
+  // When the selected variant (e.g. a color/style) has its own photo,
+  // jump the gallery to that image instead of leaving it on whatever
+  // was showing before.
+  useEffect(() => {
+    if (!variantImageUrl) return;
+    const idx = images.findIndex((img) => img.url === variantImageUrl);
+    if (idx !== -1) setActiveIndex(idx);
+  }, [variantImageUrl, images]);
 
   return (
     <div>
