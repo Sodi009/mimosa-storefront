@@ -20,13 +20,6 @@ const CATEGORIES = [
     ),
   },
   {
-    name: "Shoes",
-    handle: "shoes",
-    icon: (
-      <path d="M3 16c0-1 1-2 2-2s1.5.5 2.5.5S9 13 10 12c1-1 2-1 3 0 1.5 1.5 3 2 5 2 1.5 0 3 1 3 3v1H3v-2Z" />
-    ),
-  },
-  {
     name: "Accessories",
     handle: "accessories",
     icon: (
@@ -38,6 +31,13 @@ const CATEGORIES = [
     handle: "innerwear",
     icon: (
       <path d="M12 21s-7.5-4.6-10-9.3C.5 8 2.4 4 6.4 4c2 0 3.6 1.2 4.6 2.8C12 5.2 13.6 4 15.6 4c4 0 5.9 4 4.4 7.7-2.5 4.7-10 9.3-10 9.3Z" />
+    ),
+  },
+  {
+    name: "Shoes",
+    handle: "shoes",
+    icon: (
+      <path d="M3 16c0-1 1-2 2-2s1.5.5 2.5.5S9 13 10 12c1-1 2-1 3 0 1.5 1.5 3 2 5 2 1.5 0 3 1 3 3v1H3v-2Z" />
     ),
   },
 ];
