@@ -43,11 +43,15 @@ export default function TrackPage() {
 
     try {
       if (!TRACKING_API_URL) {
-        throw new Error("Tracking isn't configured yet.");
+        setError("Tracking isn't configured yet.");
+        return;
       }
       const res = await fetch(
         `${TRACKING_API_URL}?action=track&q=${encodeURIComponent(query.trim())}`
       );
+      if (!res.ok) {
+        throw new Error(`Tracking server responded with ${res.status}`);
+      }
       const data = await res.json();
       if (data.found) {
         setOrder(data);
@@ -55,6 +59,7 @@ export default function TrackPage() {
         setError("We couldn't find that order. Check the ID or name and try again.");
       }
     } catch (err) {
+      console.error("Track order lookup failed:", err);
       setError("Something went wrong looking that up. Please try again.");
     } finally {
       setLoading(false);
