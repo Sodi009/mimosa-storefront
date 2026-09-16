@@ -1,4 +1,4 @@
-import { getCollectionByHandle, getProducts } from "@/lib/shopify";
+import { getCollectionByHandle, getProducts, getProductsByCategory, CATEGORY_KEYWORDS } from "@/lib/shopify";
 import ProductCard from "@/components/ProductCard";
 
 export default async function CollectionPage({ params }) {
@@ -9,6 +9,9 @@ export default async function CollectionPage({ params }) {
   if (handle === "all") {
     title = "All products";
     products = await getProducts({ first: 48 });
+  } else if (CATEGORY_KEYWORDS[handle]) {
+    title = handle.charAt(0).toUpperCase() + handle.slice(1);
+    products = await getProductsByCategory(handle);
   } else {
     const collection = await getCollectionByHandle(handle, { first: 48 });
     if (!collection) {
