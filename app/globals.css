@@ -416,6 +416,38 @@ button {
   border-bottom: 1px solid var(--line);
 }
 
+/* ---------- Category filter ---------- */
+
+.category-filter {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding-bottom: 32px;
+  overflow-x: auto;
+}
+
+.category-filter-pill {
+  flex-shrink: 0;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 8px 18px;
+  font-size: 13px;
+  color: var(--muted);
+  white-space: nowrap;
+  transition: border-color 0.2s ease, color 0.2s ease;
+}
+
+.category-filter-pill:hover {
+  border-color: var(--brass);
+  color: var(--ink);
+}
+
+.category-filter-pill.selected {
+  border-color: var(--ink);
+  background: var(--ink);
+  color: var(--bg);
+}
+
 /* ---------- Product grid ---------- */
 
 .product-grid {

@@ -1,6 +1,15 @@
 import { getCollectionByHandle, getProducts, getProductsByCategory, CATEGORY_KEYWORDS } from "@/lib/shopify";
 import ProductCard from "@/components/ProductCard";
 
+const FILTER_CATEGORIES = [
+  { name: "All", handle: "all" },
+  { name: "New In", handle: "new" },
+  { name: "Bags", handle: "bags" },
+  { name: "Clothes", handle: "clothes" },
+  { name: "Shoes", handle: "shoes" },
+  { name: "Accessories", handle: "accessories" },
+];
+
 export default async function CollectionPage({ params }) {
   const { handle } = await params;
   let title = handle;
@@ -32,6 +41,17 @@ export default async function CollectionPage({ params }) {
     <main className="wrap">
       <div className="section-head">
         <h2>{title}</h2>
+      </div>
+      <div className="category-filter">
+        {FILTER_CATEGORIES.map((cat) => (
+          <a
+            key={cat.handle}
+            href={`/collections/${cat.handle}`}
+            className={`category-filter-pill ${handle === cat.handle ? "selected" : ""}`}
+          >
+            {cat.name}
+          </a>
+        ))}
       </div>
       <div className="product-grid">
         {products.map((product) => (
