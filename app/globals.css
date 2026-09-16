@@ -798,6 +798,12 @@ button {
   justify-content: space-between;
 }
 
+.footer-social-group {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
 .footer-social {
   display: flex;
   color: var(--muted);
