@@ -1,8 +1,5 @@
-import Script from "next/script";
 import { getProducts } from "@/lib/shopify";
 import ProductCard from "@/components/ProductCard";
-
-const TIKTOK_VIDEO_IDS = ["7622657211243728146", "7622285294099762440"];
 
 const CATEGORIES = [
   {
@@ -97,19 +94,16 @@ export default async function HomePage() {
       </section>
 
       <div className="tiktok-embed-wrap">
-        {TIKTOK_VIDEO_IDS.map((id) => (
-          <blockquote
-            key={id}
-            className="tiktok-embed"
-            cite={`https://www.tiktok.com/@mimosa1872/video/${id}`}
-            data-video-id={id}
-            style={{ maxWidth: 325, minWidth: 325 }}
-          >
-            <section />
-          </blockquote>
-        ))}
+        <video
+          className="tiktok-loop-video"
+          src="/videos/mimosa-tiktok-1.mp4"
+          autoPlay
+          muted
+          loop
+          playsInline
+          controls
+        />
       </div>
-      <Script async src="https://www.tiktok.com/embed.js" strategy="lazyOnload" />
 
       <div className="section-head">
         <h2>Shop by category</h2>
