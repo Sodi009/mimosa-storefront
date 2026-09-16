@@ -4,6 +4,32 @@ import { useState } from "react";
 import Link from "next/link";
 import { useCart } from "@/lib/cart-context";
 import { getWhatsAppCheckoutUrl } from "@/lib/whatsapp";
+import { submitOrderToSheet } from "@/lib/orders";
+
+// Matches the exact list in the Admin panel's area dropdown, so orders placed on the
+// website land in the same buckets the area/insights charts already group by.
+const DUBAI_AREAS = [
+  "Al Rigga",
+  "Deira",
+  "Bur Dubai",
+  "Downtown",
+  "Business Bay",
+  "Dubai Marina",
+  "JLT",
+  "JBR",
+  "Jumeirah",
+  "Mirdif",
+  "Al Quoz",
+  "Karama",
+  "Satwa",
+  "Nad Al Sheba",
+  "Silicon Oasis",
+  "International City",
+  "Discovery Gardens",
+  "Sports City",
+  "Motor City",
+  "Other",
+];
 
 function formatMoney(amount, currencyCode) {
   return new Intl.NumberFormat("en-US", {
@@ -15,6 +41,7 @@ function formatMoney(amount, currencyCode) {
 export default function CheckoutPage() {
   const { lines, subtotal, currencyCode } = useCart();
   const [type, setType] = useState("delivery");
+  const [payment, setPayment] = useState("cod");
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [area, setArea] = useState("");
@@ -23,6 +50,7 @@ export default function CheckoutPage() {
   const [apartment, setApartment] = useState("");
   const [landmark, setLandmark] = useState("");
   const [error, setError] = useState(null);
+  const [submitting, setSubmitting] = useState(false);
 
   if (lines.length === 0) {
     return (
@@ -38,7 +66,7 @@ export default function CheckoutPage() {
     );
   }
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
     setError(null);
 
@@ -46,26 +74,62 @@ export default function CheckoutPage() {
       setError("Please enter your name and phone number.");
       return;
     }
-    if (type === "delivery" && (!area.trim() || !building.trim() || !street.trim())) {
+    if (type === "delivery" && (!area || !building.trim() || !street.trim())) {
       setError("Please fill in your area, building/villa, and street for delivery.");
       return;
     }
 
+    setSubmitting(true);
+
     const fulfillment =
       type === "pickup"
-        ? { type, name: name.trim(), phone: phone.trim() }
+        ? { type, payment, name: name.trim(), phone: phone.trim() }
         : {
             type,
+            payment,
             name: name.trim(),
             phone: phone.trim(),
-            area: area.trim(),
+            area,
             building: building.trim(),
             street: street.trim(),
             apartment: apartment.trim(),
             landmark: landmark.trim(),
           };
 
-    const url = getWhatsAppCheckoutUrl(lines, subtotal, currencyCode, fulfillment);
+    // Same item/price string shape the Admin panel's own order form saves
+    // ("Name (xQty)" joined by ", ", unit prices joined the same way).
+    const itemStr = lines
+      .map((l) => {
+        const variantPart = l.variantTitle && l.variantTitle !== "Default Title" ? ` - ${l.variantTitle}` : "";
+        return `${l.productTitle}${variantPart} (x${l.quantity})`;
+      })
+      .join(", ");
+    const priceStr = lines.map((l) => l.price).join(", ");
+    const totalQty = lines.reduce((sum, l) => sum + l.quantity, 0);
+
+    const addressLine =
+      type === "pickup"
+        ? `Pickup — Phone: ${fulfillment.phone}`
+        : [building, street, apartment].filter(Boolean).join(", ") +
+          (landmark ? ` (near ${landmark})` : "") +
+          ` — Phone: ${fulfillment.phone}`;
+
+    const result = await submitOrderToSheet({
+      name: fulfillment.name,
+      item: itemStr,
+      price: priceStr,
+      qty: totalQty,
+      amount: subtotal.toFixed(2),
+      payment: payment === "cod" ? "CASH ON DELIVERY" : "PAID ONLINE",
+      area: type === "delivery" ? area : "",
+      address: addressLine,
+    });
+
+    const url = getWhatsAppCheckoutUrl(lines, subtotal, currencyCode, {
+      ...fulfillment,
+      orderId: result.success ? result.no : null,
+    });
+    setSubmitting(false);
     window.open(url, "_blank", "noopener,noreferrer");
   }
 
@@ -101,6 +165,26 @@ export default function CheckoutPage() {
             </div>
           </div>
 
+          <div className="option-group">
+            <p className="option-label">Payment</p>
+            <div className="fulfillment-toggle">
+              <button
+                type="button"
+                className={`fulfillment-option ${payment === "cod" ? "selected" : ""}`}
+                onClick={() => setPayment("cod")}
+              >
+                Cash on delivery
+              </button>
+              <button
+                type="button"
+                className={`fulfillment-option ${payment === "bank" ? "selected" : ""}`}
+                onClick={() => setPayment("bank")}
+              >
+                Bank transfer
+              </button>
+            </div>
+          </div>
+
           <label className="checkout-field">
             <span className="option-label">Full name</span>
             <input
@@ -126,14 +210,19 @@ export default function CheckoutPage() {
           {type === "delivery" && (
             <>
               <label className="checkout-field">
-                <span className="option-label">Area / community in Dubai</span>
-                <input
-                  type="text"
+                <span className="option-label">Area in Dubai</span>
+                <select
                   className="track-input"
                   value={area}
                   onChange={(e) => setArea(e.target.value)}
-                  placeholder="e.g. Dubai Marina, JBR, Business Bay"
-                />
+                >
+                  <option value="">Select an area</option>
+                  {DUBAI_AREAS.map((a) => (
+                    <option key={a} value={a}>
+                      {a}
+                    </option>
+                  ))}
+                </select>
               </label>
 
               <label className="checkout-field">
@@ -184,8 +273,8 @@ export default function CheckoutPage() {
 
           {error && <p className="track-error">{error}</p>}
 
-          <button type="submit" className="checkout-btn" style={{ marginTop: 8 }}>
-            Send order on WhatsApp
+          <button type="submit" className="checkout-btn" disabled={submitting} style={{ marginTop: 8 }}>
+            {submitting ? "Sending…" : "Send order on WhatsApp"}
           </button>
         </form>
 
