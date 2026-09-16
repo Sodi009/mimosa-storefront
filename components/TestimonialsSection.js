@@ -12,6 +12,18 @@ export default function TestimonialsSection({ initialReviews }) {
 
   return (
     <>
+      <ReviewForm onSubmitted={handleNewReview} />
+
+      <div className="section-head">
+        <h2>What customers say</h2>
+        <a
+          href="https://www.facebook.com/people/Mimosa-BKK-Collection/61571651470942/"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          See all on Facebook
+        </a>
+      </div>
       <div className="testimonial-grid">
         {reviews.map((t, i) => {
           const stars = t.rating || 5;
@@ -27,7 +39,6 @@ export default function TestimonialsSection({ initialReviews }) {
           );
         })}
       </div>
-      <ReviewForm onSubmitted={handleNewReview} />
     </>
   );
 }
