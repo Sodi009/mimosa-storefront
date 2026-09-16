@@ -149,6 +149,10 @@ button {
   gap: 10px;
 }
 
+.cart-toggle-wrap {
+  position: relative;
+}
+
 .cart-toggle {
   background: none;
   border: 1px solid var(--line);
@@ -156,6 +160,42 @@ button {
   padding: 8px 16px;
   font-size: 13px;
   color: var(--ink);
+}
+
+.cart-add-badge {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background: var(--sage);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1;
+  padding: 4px 6px;
+  border-radius: 999px;
+  animation: cart-badge-pop 1.4s ease forwards;
+  pointer-events: none;
+}
+
+@keyframes cart-badge-pop {
+  0% {
+    opacity: 0;
+    transform: scale(0.6) translateY(4px);
+  }
+  15% {
+    opacity: 1;
+    transform: scale(1.1) translateY(0);
+  }
+  25% {
+    transform: scale(1);
+  }
+  75% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
 }
 
 .cart-toggle:hover {
@@ -725,14 +765,17 @@ button {
 .option-pill {
   border: 1px solid var(--line);
   background: none;
-  padding: 8px 16px;
+  padding: 9px 19px;
   font-size: 13px;
-  border-radius: 2px;
-  transition: border-color 0.2s ease;
+  font-weight: 500;
+  color: var(--ink);
+  border-radius: 999px;
+  transition: border-color 0.2s ease, background 0.2s ease, color 0.2s ease, transform 0.15s ease;
 }
 
 .option-pill:not(:disabled):not(.selected):hover {
   border-color: var(--brass);
+  color: var(--brass);
 }
 
 .option-pill.selected {
@@ -741,10 +784,29 @@ button {
   color: var(--bg);
 }
 
+.option-pill:active:not(:disabled) {
+  transform: scale(0.95);
+}
+
 .option-pill:disabled {
   color: var(--muted);
   text-decoration: line-through;
   cursor: default;
+  opacity: 0.55;
+}
+
+.qty-stepper {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 14px;
+}
+
+.qty-stepper .qty-btn {
+  width: 30px;
+  height: 30px;
+  border-radius: 999px;
+  font-size: 15px;
 }
 
 /* ---------- Cart drawer ---------- */

@@ -1,13 +1,21 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useCart } from "@/lib/cart-context";
 
 export default function Header() {
-  const { cart, openCart } = useCart();
+  const { totalQuantity, openCart, lastAdded } = useCart();
   const [menuOpen, setMenuOpen] = useState(false);
-  const count = cart?.totalQuantity || 0;
+  const [showBadge, setShowBadge] = useState(false);
+  const count = totalQuantity || 0;
+
+  useEffect(() => {
+    if (!lastAdded) return;
+    setShowBadge(true);
+    const t = setTimeout(() => setShowBadge(false), 1400);
+    return () => clearTimeout(t);
+  }, [lastAdded]);
 
   return (
     <header className="site-header">
@@ -26,9 +34,14 @@ export default function Header() {
           <Link href="/track">Track Order</Link>
         </nav>
         <div className="header-actions">
-          <button className="cart-toggle" onClick={openCart}>
-            Bag {count > 0 ? `(${count})` : ""}
-          </button>
+          <div className="cart-toggle-wrap">
+            <button className="cart-toggle" onClick={openCart}>
+              Bag {count > 0 ? `(${count})` : ""}
+            </button>
+            {showBadge && lastAdded && (
+              <span className="cart-add-badge">+{lastAdded.quantity}</span>
+            )}
+          </div>
           <button
             className="menu-toggle"
             onClick={() => setMenuOpen((open) => !open)}

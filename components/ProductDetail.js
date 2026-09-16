@@ -24,6 +24,7 @@ export default function ProductDetail({ product }) {
     });
     return initial;
   });
+  const [qty, setQty] = useState(1);
 
   const selectedVariant = useMemo(
     () => variants.find((v) => variantMatchesSelection(v, selected)),
@@ -48,8 +49,9 @@ export default function ProductDetail({ product }) {
         image: selectedVariant.image?.url || product.images.edges[0]?.node.url,
         handle: product.handle,
       },
-      1
+      qty
     );
+    setQty(1);
     openCart();
   }
 
@@ -67,7 +69,6 @@ export default function ProductDetail({ product }) {
             Minimum order: {minimumQuantity} items — mix any size or design.
           </p>
         )}
-        {product.description && <p className="pdp-description">{product.description}</p>}
 
         {hasRealOptions &&
           product.options.map((opt) => (
@@ -90,6 +91,21 @@ export default function ProductDetail({ product }) {
               </div>
             </div>
           ))}
+
+        {product.description && <p className="pdp-description">{product.description}</p>}
+
+        <div className="option-group">
+          <p className="option-label">Quantity</p>
+          <div className="qty-stepper">
+            <button type="button" className="qty-btn" onClick={() => setQty((q) => Math.max(1, q - 1))}>
+              −
+            </button>
+            <span>{qty}</span>
+            <button type="button" className="qty-btn" onClick={() => setQty((q) => q + 1)}>
+              +
+            </button>
+          </div>
+        </div>
 
         <button
           className="btn-primary"
