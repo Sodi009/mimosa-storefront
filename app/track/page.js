@@ -160,7 +160,7 @@ export default function TrackPage() {
                   <strong>Out for delivery</strong>
                   <span>Courier is on the way.</span>
                   <a
-                    href="https://wa.me/971504036705"
+                    href="https://wa.me/66629141307"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="track-wa-link"
