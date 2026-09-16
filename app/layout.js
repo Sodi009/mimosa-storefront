@@ -1,6 +1,6 @@
+import { Suspense } from "react";
 import "./globals.css";
 import { CartProvider } from "@/lib/cart-context";
-import { getAnnouncement } from "@/lib/announcement";
 import AnnouncementBar from "@/components/AnnouncementBar";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -11,9 +11,7 @@ export const metadata = {
   description: "Mimosa BKK Collection — considered pieces, made to last.",
 };
 
-export default async function RootLayout({ children }) {
-  const announcement = await getAnnouncement();
-
+export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <head>
@@ -26,7 +24,11 @@ export default async function RootLayout({ children }) {
       </head>
       <body>
         <CartProvider>
-          <AnnouncementBar message={announcement} />
+          {/* Streams in once the announcement fetch resolves, instead of
+              blocking every page on a slow Google Apps Script response. */}
+          <Suspense fallback={null}>
+            <AnnouncementBar />
+          </Suspense>
           <Header />
           {children}
           <Footer />

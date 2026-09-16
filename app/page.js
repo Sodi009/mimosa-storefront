@@ -1,7 +1,8 @@
+import { Suspense } from "react";
 import { getProducts } from "@/lib/shopify";
-import { getReviews } from "@/lib/reviews";
 import ProductCard from "@/components/ProductCard";
 import TestimonialsSection from "@/components/TestimonialsSection";
+import ReviewsSection from "@/components/ReviewsSection";
 
 const CATEGORIES = [
   {
@@ -102,9 +103,6 @@ export default async function HomePage() {
     configError = err.message;
   }
 
-  const submittedReviews = await getReviews();
-  const allReviews = [...submittedReviews, ...TESTIMONIALS];
-
   return (
     <main className="wrap">
       <section className="hero">
@@ -194,7 +192,9 @@ export default async function HomePage() {
         </div>
       )}
 
-      <TestimonialsSection initialReviews={allReviews} />
+      <Suspense fallback={<TestimonialsSection initialReviews={TESTIMONIALS} />}>
+        <ReviewsSection curatedReviews={TESTIMONIALS} />
+      </Suspense>
     </main>
   );
 }
