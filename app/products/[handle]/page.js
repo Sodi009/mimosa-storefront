@@ -1,5 +1,6 @@
 import { getProductByHandle } from "@/lib/shopify";
 import AddToCartButton from "@/components/AddToCartButton";
+import ProductGallery from "@/components/ProductGallery";
 
 function formatMoney(amount, currencyCode) {
   return new Intl.NumberFormat("en-US", {
@@ -26,18 +27,7 @@ export default async function ProductPage({ params }) {
   return (
     <main className="wrap">
       <div className="pdp">
-        <div>
-          <div className="pdp-gallery-main">
-            {images[0] && <img src={images[0].url} alt={images[0].altText || product.title} />}
-          </div>
-          {images.length > 1 && (
-            <div className="pdp-thumbs">
-              {images.slice(1).map((img) => (
-                <img key={img.url} src={img.url} alt={img.altText || ""} />
-              ))}
-            </div>
-          )}
-        </div>
+        <ProductGallery images={images} title={product.title} />
 
         <div className="pdp-info">
           <h1>{product.title}</h1>

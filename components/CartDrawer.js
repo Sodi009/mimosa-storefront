@@ -13,14 +13,12 @@ function formatMoney(amount, currencyCode) {
 export default function CartDrawer() {
   const { lines, isOpen, closeCart, updateQuantity, removeItem, subtotal, currencyCode } = useCart();
 
-  if (!isOpen) return null;
-
   const checkoutUrl = getWhatsAppCheckoutUrl(lines, subtotal, currencyCode);
 
   return (
     <>
-      <div className="cart-overlay" onClick={closeCart} />
-      <div className="cart-drawer">
+      <div className={`cart-overlay ${isOpen ? "open" : ""}`} onClick={closeCart} />
+      <div className={`cart-drawer ${isOpen ? "open" : ""}`}>
         <div className="cart-drawer-head">
           <h2>Your bag</h2>
           <button className="cart-close" onClick={closeCart} aria-label="Close cart">
@@ -29,7 +27,18 @@ export default function CartDrawer() {
         </div>
 
         <div className="cart-lines">
-          {lines.length === 0 && <p className="cart-empty">Your bag is empty.</p>}
+          {lines.length === 0 && (
+            <div className="cart-empty">
+              <svg viewBox="0 0 24 24" width="36" height="36" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M6 8h12l1 12a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2L6 8Z" />
+                <path d="M9 8V6a3 3 0 0 1 6 0v2" />
+              </svg>
+              <p>Your bag is empty.</p>
+              <a href="/collections/all" className="btn-secondary" onClick={closeCart}>
+                Continue shopping
+              </a>
+            </div>
+          )}
           {lines.map((line) => (
             <div className="cart-line" key={line.variantId}>
               <div className="cart-line-image">
