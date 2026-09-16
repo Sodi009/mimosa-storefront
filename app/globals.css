@@ -7,6 +7,17 @@
   --sage: #5c7a5e;
   --font-display: "Playfair Display", Georgia, serif;
   --font-body: "Inter", -apple-system, sans-serif;
+
+  /* Liquid-glass surfaces: translucent + blurred, tinted with the site's own
+     warm palette rather than neutral white, so it stays on-brand. */
+  --glass-bg: rgba(234, 227, 218, 0.55);
+  --glass-bg-strong: rgba(238, 232, 224, 0.8);
+  --glass-border: rgba(255, 255, 255, 0.5);
+  --glass-blur: blur(20px) saturate(180%);
+  --glass-blur-sm: blur(10px) saturate(160%);
+  --glass-shadow: 0 8px 32px rgba(28, 26, 23, 0.1);
+  --glass-shadow-lg: 0 20px 60px rgba(28, 26, 23, 0.16);
+  --glass-highlight: inset 0 1px 0 rgba(255, 255, 255, 0.55);
 }
 
 * {
@@ -84,8 +95,11 @@ button {
   position: sticky;
   top: 0;
   z-index: 40;
-  background: var(--bg);
-  border-bottom: 1px solid var(--line);
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border-bottom: 1px solid var(--glass-border);
+  box-shadow: 0 1px 24px rgba(28, 26, 23, 0.05);
 }
 
 .site-header-inner {
@@ -154,12 +168,24 @@ button {
 }
 
 .cart-toggle {
-  background: none;
-  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.35);
+  backdrop-filter: var(--glass-blur-sm);
+  -webkit-backdrop-filter: var(--glass-blur-sm);
+  border: 1px solid var(--glass-border);
   border-radius: 999px;
   padding: 8px 16px;
   font-size: 13px;
   color: var(--ink);
+  box-shadow: var(--glass-highlight);
+  transition: background 0.2s ease, transform 0.15s ease;
+}
+
+.cart-toggle:hover {
+  background: rgba(255, 255, 255, 0.55);
+}
+
+.cart-toggle:active {
+  transform: scale(0.96);
 }
 
 .cart-add-badge {
@@ -198,14 +224,12 @@ button {
   }
 }
 
-.cart-toggle:hover {
-  border-color: var(--brass);
-}
-
 .menu-toggle {
   display: none;
-  background: none;
-  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.35);
+  backdrop-filter: var(--glass-blur-sm);
+  -webkit-backdrop-filter: var(--glass-blur-sm);
+  border: 1px solid var(--glass-border);
   border-radius: 999px;
   width: 38px;
   height: 38px;
@@ -232,9 +256,11 @@ button {
     right: 0;
     flex-direction: column;
     gap: 0;
-    background: var(--bg);
-    border-bottom: 1px solid var(--line);
-    box-shadow: 0 12px 20px rgba(0, 0, 0, 0.06);
+    background: var(--glass-bg-strong);
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
+    border-bottom: 1px solid var(--glass-border);
+    box-shadow: var(--glass-shadow);
   }
 
   .header-nav.open {
@@ -310,7 +336,8 @@ button {
   border: none;
   padding: 14px 28px;
   font-size: 14px;
-  border-radius: 2px;
+  border-radius: 999px;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.18);
   transition: opacity 0.2s ease, transform 0.2s ease;
 }
 
@@ -329,12 +356,14 @@ button {
 
 .btn-secondary {
   display: inline-block;
-  background: none;
+  background: rgba(255, 255, 255, 0.3);
+  backdrop-filter: var(--glass-blur-sm);
+  -webkit-backdrop-filter: var(--glass-blur-sm);
   border: 1px solid var(--ink);
   color: var(--ink);
   padding: 13px 27px;
   font-size: 14px;
-  border-radius: 2px;
+  border-radius: 999px;
   transition: background 0.2s ease, color 0.2s ease;
 }
 
@@ -369,16 +398,20 @@ button {
   align-items: center;
   gap: 12px;
   padding: 32px 16px;
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  background: transparent;
+  border: 1px solid var(--glass-border);
+  border-radius: 20px;
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur-sm);
+  -webkit-backdrop-filter: var(--glass-blur-sm);
+  box-shadow: var(--glass-highlight);
   text-align: center;
-  transition: border-color 0.2s ease, transform 0.2s ease;
+  transition: border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .category-card:hover {
   border-color: var(--brass);
-  transform: translateY(-2px);
+  transform: translateY(-3px);
+  box-shadow: var(--glass-highlight), var(--glass-shadow);
 }
 
 .category-icon {
@@ -469,13 +502,16 @@ button {
 
 .category-filter-pill {
   flex-shrink: 0;
-  border: 1px solid var(--line);
+  border: 1px solid var(--glass-border);
+  background: rgba(255, 255, 255, 0.3);
+  backdrop-filter: var(--glass-blur-sm);
+  -webkit-backdrop-filter: var(--glass-blur-sm);
   border-radius: 999px;
   padding: 8px 18px;
   font-size: 13px;
   color: var(--muted);
   white-space: nowrap;
-  transition: border-color 0.2s ease, color 0.2s ease;
+  transition: border-color 0.2s ease, color 0.2s ease, background 0.2s ease;
 }
 
 .category-filter-pill:hover {
@@ -508,14 +544,16 @@ button {
 .product-card {
   background: var(--bg);
   border: 1px solid var(--line);
-  border-radius: 4px;
+  border-radius: 18px;
   overflow: hidden;
   padding: 0 0 14px;
-  transition: border-color 0.2s ease;
+  transition: border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .product-card:hover {
   border-color: var(--brass);
+  transform: translateY(-3px);
+  box-shadow: var(--glass-shadow);
 }
 
 .product-card-image {
@@ -569,9 +607,13 @@ button {
   display: flex;
   flex-direction: column;
   gap: 12px;
-  border: 1px solid var(--line);
-  border-radius: 8px;
+  border: 1px solid var(--glass-border);
+  border-radius: 20px;
   padding: 24px;
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur-sm);
+  -webkit-backdrop-filter: var(--glass-blur-sm);
+  box-shadow: var(--glass-highlight);
 }
 
 .testimonial-stars {
@@ -614,8 +656,12 @@ button {
   max-width: 420px;
   margin: 0 auto 24px;
   padding: 28px;
-  border: 1px solid var(--line);
-  border-radius: 8px;
+  border: 1px solid var(--glass-border);
+  border-radius: 24px;
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur-sm);
+  -webkit-backdrop-filter: var(--glass-blur-sm);
+  box-shadow: var(--glass-highlight), var(--glass-shadow);
 }
 
 .review-star-picker {
@@ -784,8 +830,10 @@ button {
 }
 
 .option-pill {
-  border: 1px solid var(--line);
-  background: none;
+  border: 1px solid var(--glass-border);
+  background: rgba(255, 255, 255, 0.3);
+  backdrop-filter: var(--glass-blur-sm);
+  -webkit-backdrop-filter: var(--glass-blur-sm);
   padding: 9px 19px;
   font-size: 13px;
   font-weight: 500;
@@ -835,7 +883,9 @@ button {
 .cart-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(27, 26, 23, 0.35);
+  background: rgba(27, 26, 23, 0.28);
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
   z-index: 60;
   opacity: 0;
   pointer-events: none;
@@ -853,11 +903,14 @@ button {
   right: 0;
   height: 100%;
   width: min(420px, 100%);
-  background: var(--bg);
+  background: var(--glass-bg-strong);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border-left: 1px solid var(--glass-border);
   z-index: 61;
   display: flex;
   flex-direction: column;
-  box-shadow: -8px 0 30px rgba(0, 0, 0, 0.08);
+  box-shadow: var(--glass-shadow-lg);
   transform: translateX(100%);
   transition: transform 0.3s ease;
   pointer-events: none;
@@ -913,6 +966,7 @@ button {
   background: var(--line);
   overflow: hidden;
   flex-shrink: 0;
+  border-radius: 12px;
 }
 
 .cart-line-image img {
@@ -940,17 +994,24 @@ button {
 }
 
 .qty-btn {
-  border: 1px solid var(--line);
-  background: none;
+  border: 1px solid var(--glass-border);
+  background: rgba(255, 255, 255, 0.4);
+  backdrop-filter: var(--glass-blur-sm);
+  -webkit-backdrop-filter: var(--glass-blur-sm);
   width: 24px;
   height: 24px;
   line-height: 1;
-  border-radius: 2px;
-  transition: border-color 0.2s ease;
+  border-radius: 999px;
+  box-shadow: var(--glass-highlight);
+  transition: background 0.2s ease, transform 0.15s ease;
 }
 
 .qty-btn:hover {
-  border-color: var(--brass);
+  background: rgba(255, 255, 255, 0.6);
+}
+
+.qty-btn:active {
+  transform: scale(0.92);
 }
 
 .cart-line-top {
@@ -1018,8 +1079,9 @@ button {
   background: var(--ink);
   color: var(--bg);
   padding: 15px;
-  border-radius: 2px;
+  border-radius: 999px;
   font-size: 14px;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.18);
   transition: opacity 0.2s ease;
 }
 
@@ -1113,13 +1175,15 @@ button {
 
 .fulfillment-option {
   flex: 1;
-  border: 1px solid var(--line);
-  background: none;
+  border: 1px solid var(--glass-border);
+  background: rgba(255, 255, 255, 0.3);
+  backdrop-filter: var(--glass-blur-sm);
+  -webkit-backdrop-filter: var(--glass-blur-sm);
   padding: 10px 16px;
   font-size: 13px;
-  border-radius: 2px;
+  border-radius: 999px;
   color: var(--ink);
-  transition: border-color 0.2s ease;
+  transition: border-color 0.2s ease, background 0.2s ease;
 }
 
 .fulfillment-option:hover {
@@ -1133,9 +1197,13 @@ button {
 }
 
 .checkout-summary {
-  border: 1px solid var(--line);
-  border-radius: 4px;
+  border: 1px solid var(--glass-border);
+  border-radius: 20px;
   padding: 20px;
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur-sm);
+  -webkit-backdrop-filter: var(--glass-blur-sm);
+  box-shadow: var(--glass-highlight);
 }
 
 .checkout-min-qty-notice {
@@ -1166,11 +1234,12 @@ button {
   flex: 1;
   min-width: 220px;
   border: 1px solid var(--line);
-  background: var(--bg);
+  background: rgba(255, 255, 255, 0.4);
   padding: 13px 16px;
   font-size: 16px;
-  border-radius: 2px;
+  border-radius: 12px;
   color: var(--ink);
+  transition: border-color 0.2s ease, background 0.2s ease;
 }
 
 .track-input:focus {
@@ -1187,7 +1256,9 @@ button {
 .track-modal-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(27, 26, 23, 0.4);
+  background: rgba(27, 26, 23, 0.32);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
   z-index: 70;
   display: flex;
   align-items: center;
@@ -1198,14 +1269,17 @@ button {
 
 .track-modal {
   position: relative;
-  background: var(--bg);
+  background: var(--glass-bg-strong);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
   width: 100%;
   max-width: 480px;
   max-height: 90vh;
   overflow-y: auto;
-  border-radius: 4px;
+  border-radius: 24px;
   padding: 32px 28px;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+  box-shadow: var(--glass-shadow-lg), var(--glass-highlight);
   animation: track-modal-in 0.25s ease;
 }
 
@@ -1364,7 +1438,7 @@ button {
 
 .track-item-card {
   border: 1px solid var(--line);
-  border-radius: 2px;
+  border-radius: 16px;
   padding: 18px;
 }
 
