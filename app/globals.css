@@ -833,7 +833,7 @@ button {
   border: 1px solid var(--line);
   background: var(--bg);
   padding: 13px 16px;
-  font-size: 14px;
+  font-size: 16px;
   border-radius: 2px;
   color: var(--ink);
 }
