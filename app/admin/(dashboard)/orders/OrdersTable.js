@@ -64,17 +64,12 @@ function OrderRow({ order, selectable, selected, onToggleSelect, onEdit }) {
       )}
       <td className="admin-table-muted">{order.order_no}</td>
       <td>{order.name}</td>
-      <td style={{ maxWidth: 240 }}>
-        <div style={{ fontSize: 12 }}>{order.items}</div>
-        {order.address && (
-          <div className="admin-table-muted" style={{ fontSize: 11, marginTop: 2 }}>
-            {order.area ? `${order.area} — ` : ""}
-            {order.address}
-          </div>
-        )}
-        {order.phone && (
-          <div className="admin-table-muted" style={{ fontSize: 11 }}>{order.phone}</div>
-        )}
+      <td className="admin-col-items">{order.items}</td>
+      <td className="admin-col-delivery">
+        {order.area && <div>{order.area}</div>}
+        {order.address && <div className="admin-table-muted">{order.address}</div>}
+        {order.phone && <div className="admin-table-muted">{order.phone}</div>}
+        {!order.area && !order.address && !order.phone && <span className="admin-table-muted">—</span>}
       </td>
       <td>{Number(order.amount).toFixed(2)} AED</td>
       <td>
@@ -221,6 +216,7 @@ export default function OrdersTable({ orders }) {
               <th>Order</th>
               <th>Name</th>
               <th>Items</th>
+              <th>Delivery</th>
               <th>Amount</th>
               <th>Payment</th>
               <th>Status</th>

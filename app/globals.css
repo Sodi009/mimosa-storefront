@@ -1588,9 +1588,9 @@ button {
 }
 
 .admin-table td {
-  padding: 10px;
+  padding: 12px 10px;
   border-bottom: 1px solid var(--line);
-  vertical-align: middle;
+  vertical-align: top;
 }
 
 .admin-table-thumb {
@@ -2019,6 +2019,32 @@ button {
 .admin-batch-bar .btn-primary {
   padding: 8px 16px;
   font-size: 12px;
+}
+
+.admin-col-items {
+  max-width: 180px;
+  font-size: 12px;
+}
+
+.admin-col-delivery {
+  max-width: 200px;
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+/* Hide native number-input spinner arrows across the admin panel — they
+   look inconsistent with the rest of the site's styling. */
+.admin-order-item-row input[type="number"]::-webkit-outer-spin-button,
+.admin-order-item-row input[type="number"]::-webkit-inner-spin-button,
+.admin-variant-table input[type="number"]::-webkit-outer-spin-button,
+.admin-variant-table input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.admin-order-item-row input[type="number"],
+.admin-variant-table input[type="number"] {
+  -moz-appearance: textfield;
 }
 
 @media (max-width: 700px) {
