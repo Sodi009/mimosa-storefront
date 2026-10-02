@@ -73,6 +73,7 @@ export default function ProductForm({ product }) {
   const [description, setDescription] = useState(product?.description || "");
   const [images, setImages] = useState(product?.images || []);
   const [uploading, setUploading] = useState(false);
+  const [minQuantity, setMinQuantity] = useState(String(product?.min_quantity || 1));
 
   const opt1 = product?.options?.[0];
   const opt2 = product?.options?.[1];
@@ -164,6 +165,7 @@ export default function ProductForm({ product }) {
     fd.set("title", title.trim());
     fd.set("category", category);
     fd.set("description", description);
+    fd.set("minQuantity", String(Math.max(1, Number(minQuantity) || 1)));
     fd.set("images", JSON.stringify(images));
     fd.set("options", JSON.stringify(options));
     fd.set("variants", JSON.stringify(variants));
@@ -199,6 +201,22 @@ export default function ProductForm({ product }) {
       <label className="admin-field">
         <span>Description</span>
         <textarea name="description" rows={4} value={description} onChange={(e) => setDescription(e.target.value)} />
+      </label>
+
+      <label className="admin-field">
+        <span>Minimum order quantity</span>
+        <input
+          type="number"
+          min="1"
+          step="1"
+          value={minQuantity}
+          onChange={(e) => setMinQuantity(e.target.value)}
+          style={{ maxWidth: 120 }}
+        />
+        <span className="admin-section-hint" style={{ margin: "4px 0 0" }}>
+          Leave at 1 for no minimum. Set to 2, 3, etc. to require customers buy at least that many
+          (any mix of size/style counts) before checkout.
+        </span>
       </label>
 
       <div className="admin-field">

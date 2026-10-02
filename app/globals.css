@@ -7,6 +7,20 @@
   --sage: #5c7a5e;
   --font-display: "Playfair Display", Georgia, serif;
   --font-body: "Inter", -apple-system, sans-serif;
+
+  /* Subtle glass surfaces: a light frosted touch tinted with the site's own
+     warm palette, not neutral white. Reserved for chrome that always has
+     its own solid content on top (cards, pills, the sticky header) — never
+     for panels like the cart drawer or mobile nav, where text sits directly
+     over whatever's scrolling behind it and blur isn't guaranteed to render
+     in every browser. Those stay fully solid instead. */
+  --glass-bg: rgba(255, 252, 247, 0.55);
+  --glass-border: rgba(255, 255, 255, 0.6);
+  --glass-blur: blur(14px) saturate(160%);
+  --glass-blur-sm: blur(8px) saturate(140%);
+  --glass-shadow: 0 4px 20px rgba(28, 26, 23, 0.07);
+  --glass-shadow-lg: 0 16px 40px rgba(28, 26, 23, 0.14);
+  --glass-highlight: inset 0 1px 0 rgba(255, 255, 255, 0.5);
 }
 
 * {
@@ -84,8 +98,12 @@ button {
   position: sticky;
   top: 0;
   z-index: 40;
+  /* Solid, same reasoning as .cart-drawer: this sits over scrolling page
+     content, so its own text needs to stay legible with or without blur
+     support. */
   background: var(--bg);
   border-bottom: 1px solid var(--line);
+  box-shadow: var(--glass-shadow);
 }
 
 .site-header-inner {
@@ -157,12 +175,15 @@ button {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: none;
-  border: 1px solid var(--line);
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur-sm);
+  -webkit-backdrop-filter: var(--glass-blur-sm);
+  border: 1px solid var(--glass-border);
   border-radius: 999px;
   width: 38px;
   height: 38px;
   color: var(--ink);
+  box-shadow: var(--glass-highlight);
   transition: border-color 0.2s ease, transform 0.15s ease;
 }
 
@@ -232,14 +253,17 @@ button {
 
 .menu-toggle {
   display: none;
-  background: none;
-  border: 1px solid var(--line);
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur-sm);
+  -webkit-backdrop-filter: var(--glass-blur-sm);
+  border: 1px solid var(--glass-border);
   border-radius: 999px;
   width: 38px;
   height: 38px;
   align-items: center;
   justify-content: center;
   color: var(--ink);
+  box-shadow: var(--glass-highlight);
 }
 
 @media (max-width: 700px) {
@@ -260,6 +284,9 @@ button {
     right: 0;
     flex-direction: column;
     gap: 0;
+    /* Solid, not glass: a dropdown menu's own text must never visually
+       compete with page content behind it, and blur isn't guaranteed to
+       render in every browser — this one can't rely on it for legibility. */
     background: var(--bg);
     border-bottom: 1px solid var(--line);
     box-shadow: 0 12px 20px rgba(0, 0, 0, 0.06);
@@ -339,6 +366,7 @@ button {
   padding: 14px 28px;
   font-size: 14px;
   border-radius: 2px;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.16);
   transition: opacity 0.2s ease, transform 0.2s ease;
 }
 
@@ -357,7 +385,9 @@ button {
 
 .btn-secondary {
   display: inline-block;
-  background: none;
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur-sm);
+  -webkit-backdrop-filter: var(--glass-blur-sm);
   border: 1px solid var(--ink);
   color: var(--ink);
   padding: 13px 27px;
@@ -397,16 +427,20 @@ button {
   align-items: center;
   gap: 12px;
   padding: 32px 16px;
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  background: transparent;
+  border: 1px solid var(--glass-border);
+  border-radius: 10px;
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur-sm);
+  -webkit-backdrop-filter: var(--glass-blur-sm);
+  box-shadow: var(--glass-highlight);
   text-align: center;
-  transition: border-color 0.2s ease, transform 0.2s ease;
+  transition: border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .category-card:hover {
   border-color: var(--brass);
   transform: translateY(-2px);
+  box-shadow: var(--glass-highlight), var(--glass-shadow);
 }
 
 .category-icon {
@@ -497,13 +531,16 @@ button {
 
 .category-filter-pill {
   flex-shrink: 0;
-  border: 1px solid var(--line);
+  border: 1px solid var(--glass-border);
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur-sm);
+  -webkit-backdrop-filter: var(--glass-blur-sm);
   border-radius: 999px;
   padding: 8px 18px;
   font-size: 13px;
   color: var(--muted);
   white-space: nowrap;
-  transition: border-color 0.2s ease, color 0.2s ease;
+  transition: border-color 0.2s ease, color 0.2s ease, background 0.2s ease;
 }
 
 .category-filter-pill:hover {
@@ -534,16 +571,21 @@ button {
 }
 
 .product-card {
-  background: var(--bg);
-  border: 1px solid var(--line);
-  border-radius: 4px;
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur-sm);
+  -webkit-backdrop-filter: var(--glass-blur-sm);
+  border: 1px solid var(--glass-border);
+  border-radius: 10px;
   overflow: hidden;
   padding: 0 0 14px;
-  transition: border-color 0.2s ease;
+  box-shadow: var(--glass-highlight);
+  transition: border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .product-card:hover {
   border-color: var(--brass);
+  transform: translateY(-2px);
+  box-shadow: var(--glass-highlight), var(--glass-shadow);
 }
 
 .product-card-image {
@@ -597,10 +639,13 @@ button {
   display: flex;
   flex-direction: column;
   gap: 12px;
-  border: 1px solid var(--line);
-  border-radius: 8px;
+  border: 1px solid var(--glass-border);
+  border-radius: 10px;
   padding: 24px;
-  background: transparent;
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur-sm);
+  -webkit-backdrop-filter: var(--glass-blur-sm);
+  box-shadow: var(--glass-highlight);
 }
 
 .testimonial-stars {
@@ -643,8 +688,12 @@ button {
   max-width: 420px;
   margin: 0 auto 24px;
   padding: 28px;
-  border: 1px solid var(--line);
-  border-radius: 8px;
+  border: 1px solid var(--glass-border);
+  border-radius: 10px;
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur-sm);
+  -webkit-backdrop-filter: var(--glass-blur-sm);
+  box-shadow: var(--glass-highlight);
 }
 
 .review-star-picker {
@@ -813,8 +862,10 @@ button {
 }
 
 .option-pill {
-  border: 1px solid var(--line);
-  background: none;
+  border: 1px solid var(--glass-border);
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur-sm);
+  -webkit-backdrop-filter: var(--glass-blur-sm);
   padding: 9px 19px;
   font-size: 13px;
   font-weight: 500;
@@ -884,6 +935,8 @@ button {
   right: 0;
   height: 100%;
   width: min(420px, 100%);
+  /* Solid: the drawer's own line items must never visually blend with
+     the product page scrolling behind it. */
   background: var(--bg);
   border-left: 1px solid var(--line);
   z-index: 61;
@@ -1145,8 +1198,10 @@ button {
 
 .fulfillment-option {
   flex: 1;
-  border: 1px solid var(--line);
-  background: none;
+  border: 1px solid var(--glass-border);
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur-sm);
+  -webkit-backdrop-filter: var(--glass-blur-sm);
   padding: 10px 16px;
   font-size: 13px;
   border-radius: 2px;
@@ -1165,9 +1220,13 @@ button {
 }
 
 .checkout-summary {
-  border: 1px solid var(--line);
-  border-radius: 4px;
+  border: 1px solid var(--glass-border);
+  border-radius: 10px;
   padding: 20px;
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur-sm);
+  -webkit-backdrop-filter: var(--glass-blur-sm);
+  box-shadow: var(--glass-highlight);
 }
 
 .checkout-min-qty-notice {
@@ -1233,14 +1292,16 @@ button {
 
 .track-modal {
   position: relative;
+  /* Solid, same reasoning as .cart-drawer above. */
   background: var(--bg);
+  border: 1px solid var(--line);
   width: 100%;
   max-width: 480px;
   max-height: 90vh;
   overflow-y: auto;
-  border-radius: 4px;
+  border-radius: 10px;
   padding: 32px 28px;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+  box-shadow: var(--glass-shadow-lg);
   animation: track-modal-in 0.25s ease;
 }
 

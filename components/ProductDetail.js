@@ -3,7 +3,6 @@
 import { useMemo, useState } from "react";
 import { useCart } from "@/lib/cart-context";
 import { formatPriceRange } from "@/lib/price";
-import { getMinimumQuantity } from "@/lib/product-rules";
 import ProductGallery from "./ProductGallery";
 
 function variantMatchesSelection(variant, selected) {
@@ -15,7 +14,7 @@ export default function ProductDetail({ product }) {
   const images = product.images.edges.map((e) => e.node);
   const variants = product.variants.edges.map((e) => e.node);
   const hasRealOptions = product.options.some((o) => o.name !== "Title" && o.values.length > 1);
-  const minimumQuantity = getMinimumQuantity(product.handle);
+  const minimumQuantity = product.minQuantity || 1;
 
   const [selected, setSelected] = useState(() => {
     const initial = {};
@@ -24,7 +23,7 @@ export default function ProductDetail({ product }) {
     });
     return initial;
   });
-  const [qty, setQty] = useState(1);
+  const [qty, setQty] = useState(minimumQuantity);
 
   const selectedVariant = useMemo(
     () => variants.find((v) => variantMatchesSelection(v, selected)),
@@ -48,10 +47,11 @@ export default function ProductDetail({ product }) {
         currencyCode: selectedVariant.price.currencyCode,
         image: selectedVariant.image?.url || product.images.edges[0]?.node.url,
         handle: product.handle,
+        minQuantity: minimumQuantity,
       },
       qty
     );
-    setQty(1);
+    setQty(minimumQuantity);
     openCart();
   }
 
@@ -97,7 +97,7 @@ export default function ProductDetail({ product }) {
         <div className="option-group">
           <p className="option-label">Quantity</p>
           <div className="qty-stepper">
-            <button type="button" className="qty-btn" onClick={() => setQty((q) => Math.max(1, q - 1))}>
+            <button type="button" className="qty-btn" onClick={() => setQty((q) => Math.max(minimumQuantity, q - 1))}>
               −
             </button>
             <span>{qty}</span>

@@ -94,13 +94,14 @@ export async function saveProductAction(formData) {
   const images = JSON.parse(formData.get("images") || "[]");
   const options = JSON.parse(formData.get("options") || "[]");
   const variants = JSON.parse(formData.get("variants") || "[]");
+  const minQuantity = Math.max(1, Number(formData.get("minQuantity")) || 1);
 
   if (!title) throw new Error("Title is required");
   if (!variants.length) throw new Error("At least one variant is required");
 
   const handle = await uniqueHandle(requestedHandle, id);
 
-  const productRow = { title, handle, category, description, images, options };
+  const productRow = { title, handle, category, description, images, options, min_quantity: minQuantity };
 
   let productId = id;
   if (id) {
