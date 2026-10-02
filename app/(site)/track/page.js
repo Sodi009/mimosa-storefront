@@ -1,8 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-
-const TRACKING_API_URL = process.env.NEXT_PUBLIC_TRACKING_API_URL;
+import { trackOrder } from "@/lib/orders";
 
 const STAGES = ["Preparing", "Pickup", "Shipped Out", "Out For delivery", "Delivered"];
 const STAGE_LABELS = {
@@ -42,17 +41,7 @@ export default function TrackPage() {
     setOrder(null);
 
     try {
-      if (!TRACKING_API_URL) {
-        setError("Tracking isn't configured yet.");
-        return;
-      }
-      const res = await fetch(
-        `${TRACKING_API_URL}?action=track&q=${encodeURIComponent(query.trim())}`
-      );
-      if (!res.ok) {
-        throw new Error(`Tracking server responded with ${res.status}`);
-      }
-      const data = await res.json();
+      const data = await trackOrder(query.trim());
       if (data.found) {
         setOrder(data);
       } else {

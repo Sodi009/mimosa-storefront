@@ -4,7 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { useCart } from "@/lib/cart-context";
 import { getWhatsAppCheckoutUrl } from "@/lib/whatsapp";
-import { submitOrderToSheet } from "@/lib/orders";
+import { submitOrder } from "@/lib/orders";
 import { findUnmetMinimums } from "@/lib/product-rules";
 
 // Matches the exact list in the Admin panel's area dropdown, so orders placed on the
@@ -126,15 +126,14 @@ export default function CheckoutPage() {
 
     const addressLine =
       type === "pickup"
-        ? `Pickup — Phone: ${fulfillment.phone}`
+        ? "Pickup"
         : [building, street, apartment].filter(Boolean).join(", ") +
-          (landmark ? ` (near ${landmark})` : "") +
-          ` — Phone: ${fulfillment.phone}`;
+          (landmark ? ` (near ${landmark})` : "");
 
-    // Save to the sheet in the background — WhatsApp shouldn't wait on that
-    // network round-trip, it can take a couple of seconds. The order still
-    // gets saved either way; it just won't have its ID in the WhatsApp text.
-    submitOrderToSheet({
+    // Save in the background — WhatsApp shouldn't wait on that network
+    // round-trip. The order still gets saved either way; it just won't have
+    // its ID in the WhatsApp text.
+    submitOrder({
       name: fulfillment.name,
       item: itemStr,
       price: priceStr,
@@ -143,6 +142,7 @@ export default function CheckoutPage() {
       payment: payment === "cod" ? "CASH ON DELIVERY" : "PAID ONLINE",
       area: type === "delivery" ? area : "",
       address: addressLine,
+      phone: fulfillment.phone,
     }).catch((err) => console.error("Order save failed:", err));
 
     const url = getWhatsAppCheckoutUrl(lines, subtotal, currencyCode, fulfillment);
