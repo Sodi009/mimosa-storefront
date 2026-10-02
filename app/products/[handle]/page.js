@@ -1,4 +1,4 @@
-import { getProductByHandle } from "@/lib/shopify";
+import { getProductByHandle } from "@/lib/products";
 import ProductDetail from "@/components/ProductDetail";
 
 export default async function ProductPage({ params }) {

@@ -1,4 +1,4 @@
-import { getCollectionByHandle, getProducts, getProductsByCategory, CATEGORY_KEYWORDS } from "@/lib/shopify";
+import { getProducts, getProductsByCategory, CATEGORIES } from "@/lib/products";
 import ProductCard from "@/components/ProductCard";
 
 const FILTER_CATEGORIES = [
@@ -22,21 +22,16 @@ export default async function CollectionPage({ params }) {
   } else if (handle === "new") {
     title = "New in";
     products = await getProducts({ first: 24 });
-  } else if (CATEGORY_KEYWORDS[handle]) {
+  } else if (CATEGORIES.includes(handle)) {
     title = FILTER_CATEGORIES.find((cat) => cat.handle === handle)?.name
       || handle.charAt(0).toUpperCase() + handle.slice(1);
     products = await getProductsByCategory(handle);
   } else {
-    const collection = await getCollectionByHandle(handle, { first: 48 });
-    if (!collection) {
-      return (
-        <main className="wrap">
-          <p style={{ padding: "80px 0" }}>Collection not found.</p>
-        </main>
-      );
-    }
-    title = collection.title;
-    products = collection.products.edges.map((e) => e.node);
+    return (
+      <main className="wrap">
+        <p style={{ padding: "80px 0" }}>Collection not found.</p>
+      </main>
+    );
   }
 
   return (

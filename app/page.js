@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import { getProducts } from "@/lib/shopify";
+import { getProducts } from "@/lib/products";
 import ProductCard from "@/components/ProductCard";
 import TestimonialsSection from "@/components/TestimonialsSection";
 import ReviewsSection from "@/components/ReviewsSection";
@@ -179,8 +179,7 @@ export default async function HomePage() {
 
       {configError && (
         <p style={{ color: "var(--muted)", paddingBottom: 40 }}>
-          Products will appear here once SHOPIFY_STORE_DOMAIN and
-          SHOPIFY_STOREFRONT_ACCESS_TOKEN are set in .env.local. ({configError})
+          Products will appear here once added in the admin panel. ({configError})
         </p>
       )}
 
