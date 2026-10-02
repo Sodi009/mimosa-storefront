@@ -145,27 +145,40 @@ export async function deleteProductAction(formData) {
   revalidatePath("/");
 }
 
+// Matches the old Apps Script behavior: picking "Delivered" records when it
+// happened, since the status string itself is the only place that's shown.
+function resolveStatus(status) {
+  if (status !== "Delivered") return status;
+  const now = new Date();
+  const formatted = now.toLocaleString("en-GB", {
+    timeZone: "Asia/Dubai",
+    day: "2-digit",
+    month: "short",
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false,
+  });
+  return `Delivered at ${formatted}`;
+}
+
 export async function updateOrderStatusAction(formData) {
   await assertAdmin();
   const orderNo = formData.get("orderNo");
-  let status = String(formData.get("status") || "");
-
-  // Matches the old Apps Script behavior: a "Delivered" pick records when it
-  // happened, since the status string itself is the only place that's shown.
-  if (status === "Delivered") {
-    const now = new Date();
-    const formatted = now.toLocaleString("en-GB", {
-      timeZone: "Asia/Dubai",
-      day: "2-digit",
-      month: "short",
-      hour: "2-digit",
-      minute: "2-digit",
-      hour12: false,
-    });
-    status = `Delivered at ${formatted}`;
-  }
+  const status = resolveStatus(String(formData.get("status") || ""));
 
   const { error } = await supabaseAdmin.from("orders").update({ status }).eq("order_no", orderNo);
+  if (error) throw new Error(error.message);
+
+  revalidatePath("/admin/orders");
+}
+
+export async function batchUpdateOrderStatusAction(formData) {
+  await assertAdmin();
+  const orderNos = JSON.parse(formData.get("orderNos") || "[]");
+  const status = resolveStatus(String(formData.get("status") || ""));
+  if (!orderNos.length) return;
+
+  const { error } = await supabaseAdmin.from("orders").update({ status }).in("order_no", orderNos);
   if (error) throw new Error(error.message);
 
   revalidatePath("/admin/orders");
@@ -178,4 +191,54 @@ export async function deleteOrderAction(formData) {
   if (error) throw new Error(error.message);
 
   revalidatePath("/admin/orders");
+}
+
+// Next sequential MBKK-#### ID, for pre-filling the "new order" form —
+// mirrors the old Apps Script's getNextOrderId().
+export async function getNextOrderNo() {
+  await assertAdmin();
+  const { data, error } = await supabaseAdmin.from("orders").select("order_no");
+  if (error) throw new Error(error.message);
+
+  let maxNum = 0;
+  (data || []).forEach((row) => {
+    const m = (row.order_no || "").match(/MBKK-(\d+)/i);
+    if (m) maxNum = Math.max(maxNum, Number.parseInt(m[1], 10));
+  });
+  return `MBKK-${maxNum + 1}`;
+}
+
+// Create or update an order (matches Admin.html's saveOrder(): same order_no
+// updates in place, a new one inserts). Items/prices arrive as the same
+// "Name (xQty)" / "price, price" strings the rest of the system expects.
+export async function saveOrderAction(formData) {
+  await assertAdmin();
+
+  const orderNo = String(formData.get("orderNo") || "").trim();
+  const isNew = formData.get("isNew") === "1";
+  if (!orderNo || orderNo === "MBKK-") throw new Error("Please enter a valid order ID");
+
+  const row = {
+    order_no: orderNo,
+    name: String(formData.get("name") || "").trim(),
+    items: String(formData.get("items") || ""),
+    prices: String(formData.get("prices") || ""),
+    qty: Number(formData.get("qty")) || 0,
+    amount: Number(formData.get("amount")) || 0,
+    payment: String(formData.get("payment") || "CASH ON DELIVERY"),
+    area: String(formData.get("area") || ""),
+    address: String(formData.get("address") || ""),
+    phone: String(formData.get("phone") || ""),
+  };
+
+  if (isNew) {
+    const { error } = await supabaseAdmin.from("orders").insert({ ...row, status: "Pending Confirmation" });
+    if (error) throw new Error(error.message);
+  } else {
+    const { error } = await supabaseAdmin.from("orders").update(row).eq("order_no", orderNo);
+    if (error) throw new Error(error.message);
+  }
+
+  revalidatePath("/admin/orders");
+  return { success: true };
 }
