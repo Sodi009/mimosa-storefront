@@ -1864,6 +1864,51 @@ button {
   margin-top: 8px;
 }
 
+.admin-orders-links {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.admin-orders-card {
+  display: block;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 24px;
+  color: var(--ink);
+  transition: border-color 0.2s ease, transform 0.2s ease;
+}
+
+.admin-orders-card:hover {
+  border-color: var(--brass);
+  transform: translateY(-2px);
+}
+
+.admin-orders-card h2 {
+  font-family: var(--font-display);
+  font-size: 18px;
+  margin: 0 0 8px;
+}
+
+.admin-orders-card p {
+  color: var(--muted);
+  font-size: 13px;
+  margin: 0 0 16px;
+}
+
+.admin-orders-card-cta {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--brass);
+}
+
+@media (max-width: 700px) {
+  .admin-orders-links {
+    grid-template-columns: 1fr;
+  }
+}
+
 @media (max-width: 700px) {
   .admin-topbar {
     flex-wrap: wrap;
