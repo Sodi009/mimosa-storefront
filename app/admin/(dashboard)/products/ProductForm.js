@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, useTransition } from "react";
+import { useRef, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { getUploadUrl, saveProductAction } from "../../actions";
 import { supabasePublic } from "@/lib/supabase-public";
@@ -12,10 +12,6 @@ const CATEGORIES = [
   { value: "shoes", label: "Shoes" },
   { value: "accessories", label: "Accessories" },
 ];
-
-function slugify(title) {
-  return title.toLowerCase().trim().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
-}
 
 function parseValues(str) {
   return str.split(",").map((s) => s.trim()).filter(Boolean);
@@ -47,12 +43,21 @@ function buildCombos(opt1Name, opt1Values, opt2Name, opt2Values) {
 function initVariantsFromProduct(product) {
   const map = {};
   (product?.product_variants || []).forEach((v) => {
-    map[v.title] = {
-      price: String(v.price),
-      stock: String(v.stock),
-      sku: v.sku || "",
-      imageUrl: v.image_url || "",
-    };
+    map[v.title] = { price: String(v.price), inStock: v.stock > 0 };
+  });
+  return map;
+}
+
+// Maps each Option 1 value (e.g. a color/style) to the photo that should show
+// when a shopper picks it — read back from whichever variant already carried
+// that photo, so editing a product keeps its existing picks.
+function initOptionImageMap(product) {
+  const map = {};
+  const opt1Name = product?.options?.[0]?.name;
+  if (!opt1Name) return map;
+  (product?.product_variants || []).forEach((v) => {
+    const opt = (v.selected_options || []).find((o) => o.name === opt1Name);
+    if (opt && v.image_url && !map[opt.value]) map[opt.value] = v.image_url;
   });
   return map;
 }
@@ -64,8 +69,6 @@ export default function ProductForm({ product }) {
   const fileInputRef = useRef(null);
 
   const [title, setTitle] = useState(product?.title || "");
-  const [handle, setHandle] = useState(product?.handle || "");
-  const [handleTouched, setHandleTouched] = useState(Boolean(product));
   const [category, setCategory] = useState(product?.category || CATEGORIES[0].value);
   const [description, setDescription] = useState(product?.description || "");
   const [images, setImages] = useState(product?.images || []);
@@ -79,10 +82,7 @@ export default function ProductForm({ product }) {
   const [opt2ValuesStr, setOpt2ValuesStr] = useState(opt2?.values?.join(", ") || "");
 
   const [variantValues, setVariantValues] = useState(() => initVariantsFromProduct(product));
-
-  useEffect(() => {
-    if (!handleTouched) setHandle(slugify(title));
-  }, [title, handleTouched]);
+  const [optionImageMap, setOptionImageMap] = useState(() => initOptionImageMap(product));
 
   const opt1Values = parseValues(opt1ValuesStr);
   const opt2Values = parseValues(opt2ValuesStr);
@@ -137,14 +137,14 @@ export default function ProductForm({ product }) {
 
     const variants = combos.map((c) => {
       const v = variantValues[c.title] || {};
+      const opt1Value = c.selectedOptions[0]?.value;
       return {
         title: c.title,
         selectedOptions: c.selectedOptions,
         price: Number(v.price),
-        stock: Number(v.stock) || 0,
-        sku: v.sku || "",
-        imageUrl: v.imageUrl || "",
+        stock: v.inStock === false ? 0 : 999,
         currencyCode: "AED",
+        imageUrl: (opt1Value && optionImageMap[opt1Value]) || "",
       };
     });
 
@@ -157,9 +157,11 @@ export default function ProductForm({ product }) {
     if (opt2Name && opt2Values.length) options.push({ name: opt2Name, values: opt2Values });
 
     const fd = new FormData();
-    if (product?.id) fd.set("id", product.id);
+    if (product?.id) {
+      fd.set("id", product.id);
+      fd.set("handle", product.handle);
+    }
     fd.set("title", title.trim());
-    fd.set("handle", handle);
     fd.set("category", category);
     fd.set("description", description);
     fd.set("images", JSON.stringify(images));
@@ -183,19 +185,6 @@ export default function ProductForm({ product }) {
       <label className="admin-field">
         <span>Title</span>
         <input name="title" value={title} onChange={(e) => setTitle(e.target.value)} required />
-      </label>
-
-      <label className="admin-field">
-        <span>URL handle</span>
-        <input
-          name="handle"
-          value={handle}
-          onChange={(e) => {
-            setHandleTouched(true);
-            setHandle(slugify(e.target.value));
-          }}
-          required
-        />
       </label>
 
       <label className="admin-field">
@@ -232,6 +221,10 @@ export default function ProductForm({ product }) {
         {uploading && <p className="admin-uploading">Uploading…</p>}
       </div>
 
+      <p className="admin-section-hint">
+        Does this product come in different sizes or styles? Leave these blank if it's just one item.
+      </p>
+
       <div className="admin-options-grid">
         <label className="admin-field">
           <span>Option 1 name (e.g. Style)</span>
@@ -261,20 +254,48 @@ export default function ProductForm({ product }) {
         </label>
       </div>
 
+      {opt1Values.length > 0 && images.length > 0 && (
+        <div className="admin-field">
+          <span>Photo for each {opt1Name || "option"} (tap a photo to link it — optional)</span>
+          {opt1Values.map((val) => (
+            <div className="admin-option-image-row" key={val}>
+              <span className="admin-option-image-label">{val}</span>
+              <div className="admin-option-image-choices">
+                {images.map((img) => (
+                  <button
+                    type="button"
+                    key={img.url}
+                    className={`admin-option-image-choice ${optionImageMap[val] === img.url ? "selected" : ""}`}
+                    onClick={() =>
+                      setOptionImageMap((prev) => ({
+                        ...prev,
+                        [val]: prev[val] === img.url ? undefined : img.url,
+                      }))
+                    }
+                  >
+                    <img src={img.url} alt="" />
+                  </button>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
       <div className="admin-field">
-        <span>Price &amp; stock {combos.length > 1 ? "per option" : ""}</span>
+        <span>Price {combos.length > 1 ? "per option" : ""}</span>
         <table className="admin-table admin-variant-table">
           <thead>
             <tr>
               <th>{combos.length > 1 ? "Option" : ""}</th>
               <th>Price (AED)</th>
-              <th>Stock</th>
-              <th>SKU (optional)</th>
+              <th>In stock</th>
             </tr>
           </thead>
           <tbody>
             {combos.map((c) => {
               const v = variantValues[c.title] || {};
+              const checked = v.inStock !== false;
               return (
                 <tr key={c.title}>
                   <td>{combos.length > 1 ? c.title : "—"}</td>
@@ -288,19 +309,11 @@ export default function ProductForm({ product }) {
                       required
                     />
                   </td>
-                  <td>
+                  <td className="admin-instock-cell">
                     <input
-                      type="number"
-                      min="0"
-                      step="1"
-                      value={v.stock ?? ""}
-                      onChange={(e) => updateVariantField(c.title, "stock", e.target.value)}
-                    />
-                  </td>
-                  <td>
-                    <input
-                      value={v.sku || ""}
-                      onChange={(e) => updateVariantField(c.title, "sku", e.target.value)}
+                      type="checkbox"
+                      checked={checked}
+                      onChange={(e) => updateVariantField(c.title, "inStock", e.target.checked)}
                     />
                   </td>
                 </tr>

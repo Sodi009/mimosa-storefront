@@ -1,11 +1,5 @@
-import { Suspense } from "react";
 import { GoogleAnalytics } from "@next/third-parties/google";
 import "./globals.css";
-import { CartProvider } from "@/lib/cart-context";
-import AnnouncementBar from "@/components/AnnouncementBar";
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
-import CartDrawer from "@/components/CartDrawer";
 
 const GA_MEASUREMENT_ID = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
 
@@ -26,17 +20,7 @@ export default function RootLayout({ children }) {
         />
       </head>
       <body>
-        <CartProvider>
-          {/* Streams in once the announcement fetch resolves, instead of
-              blocking every page on a slow Google Apps Script response. */}
-          <Suspense fallback={null}>
-            <AnnouncementBar />
-          </Suspense>
-          <Header />
-          {children}
-          <Footer />
-          <CartDrawer />
-        </CartProvider>
+        {children}
       </body>
       {GA_MEASUREMENT_ID && <GoogleAnalytics gaId={GA_MEASUREMENT_ID} />}
     </html>

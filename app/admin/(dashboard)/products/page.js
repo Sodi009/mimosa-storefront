@@ -28,14 +28,14 @@ export default async function AdminProductsPage() {
               <th></th>
               <th>Title</th>
               <th>Category</th>
-              <th>Stock</th>
+              <th>Status</th>
               <th></th>
             </tr>
           </thead>
           <tbody>
             {products.map((p) => {
               const variants = p.product_variants || [];
-              const totalStock = variants.reduce((sum, v) => sum + v.stock, 0);
+              const inStock = variants.some((v) => v.stock > 0);
               const thumb = p.images?.[0]?.url;
               return (
                 <tr key={p.id}>
@@ -44,7 +44,7 @@ export default async function AdminProductsPage() {
                   </td>
                   <td>{p.title}</td>
                   <td className="admin-table-muted">{p.category}</td>
-                  <td className={totalStock === 0 ? "admin-stock-zero" : ""}>{totalStock}</td>
+                  <td className={inStock ? "" : "admin-stock-zero"}>{inStock ? "In stock" : "Sold out"}</td>
                   <td className="admin-table-actions">
                     <Link href={`/admin/products/${p.id}/edit`}>Edit</Link>
                     <DeleteProductButton id={p.id} title={p.title} />

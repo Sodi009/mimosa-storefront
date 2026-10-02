@@ -1707,18 +1707,71 @@ button {
   margin-top: 6px;
 }
 
+.admin-section-hint {
+  color: var(--muted);
+  font-size: 13px;
+  margin: -8px 0 16px;
+}
+
 .admin-options-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 0 16px;
 }
 
-.admin-variant-table input {
+.admin-variant-table input[type="number"],
+.admin-variant-table input[type="text"] {
   width: 100%;
   border: 1px solid var(--line);
   padding: 6px 8px;
   font-size: 13px;
   border-radius: 2px;
+}
+
+.admin-instock-cell {
+  text-align: center;
+}
+
+.admin-instock-cell input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+}
+
+.admin-option-image-row {
+  margin-bottom: 14px;
+}
+
+.admin-option-image-label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.admin-option-image-choices {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.admin-option-image-choice {
+  padding: 0;
+  border: 2px solid transparent;
+  background: none;
+  line-height: 0;
+  border-radius: 2px;
+}
+
+.admin-option-image-choice img {
+  width: 44px;
+  height: 56px;
+  object-fit: cover;
+  display: block;
+  border: 1px solid var(--line);
+}
+
+.admin-option-image-choice.selected {
+  border-color: var(--brass);
 }
 
 .admin-form-actions {
