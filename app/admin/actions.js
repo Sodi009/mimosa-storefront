@@ -144,3 +144,38 @@ export async function deleteProductAction(formData) {
   revalidatePath("/collections/all");
   revalidatePath("/");
 }
+
+export async function updateOrderStatusAction(formData) {
+  await assertAdmin();
+  const orderNo = formData.get("orderNo");
+  let status = String(formData.get("status") || "");
+
+  // Matches the old Apps Script behavior: a "Delivered" pick records when it
+  // happened, since the status string itself is the only place that's shown.
+  if (status === "Delivered") {
+    const now = new Date();
+    const formatted = now.toLocaleString("en-GB", {
+      timeZone: "Asia/Dubai",
+      day: "2-digit",
+      month: "short",
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: false,
+    });
+    status = `Delivered at ${formatted}`;
+  }
+
+  const { error } = await supabaseAdmin.from("orders").update({ status }).eq("order_no", orderNo);
+  if (error) throw new Error(error.message);
+
+  revalidatePath("/admin/orders");
+}
+
+export async function deleteOrderAction(formData) {
+  await assertAdmin();
+  const orderNo = formData.get("orderNo");
+  const { error } = await supabaseAdmin.from("orders").delete().eq("order_no", orderNo);
+  if (error) throw new Error(error.message);
+
+  revalidatePath("/admin/orders");
+}
