@@ -222,36 +222,49 @@ export default function ProductForm({ product }) {
       </div>
 
       <p className="admin-section-hint">
-        Does this product come in different sizes or styles? Leave these blank if it's just one item.
+        Does this come in different sizes or styles, like the Soft Bra does (Style 1–5, Size 34–40)?
+        If it's just one item with one price, skip this and leave both boxes below empty.
       </p>
 
-      <div className="admin-options-grid">
-        <label className="admin-field">
-          <span>Option 1 name (e.g. Style)</span>
-          <input value={opt1Name} onChange={(e) => setOpt1Name(e.target.value)} placeholder="Style" />
-        </label>
-        <label className="admin-field">
-          <span>Option 1 values (comma separated)</span>
-          <input value={opt1ValuesStr} onChange={(e) => setOpt1ValuesStr(e.target.value)} placeholder="1, 2, 3" />
-        </label>
-        <label className="admin-field">
-          <span>Option 2 name (e.g. Size)</span>
-          <input
-            value={opt2Name}
-            onChange={(e) => setOpt2Name(e.target.value)}
-            placeholder="Size"
-            disabled={!opt1Values.length}
-          />
-        </label>
-        <label className="admin-field">
-          <span>Option 2 values (comma separated)</span>
-          <input
-            value={opt2ValuesStr}
-            onChange={(e) => setOpt2ValuesStr(e.target.value)}
-            placeholder="34, 36, 38"
-            disabled={!opt1Values.length}
-          />
-        </label>
+      <div className="admin-option-group">
+        <p className="admin-option-group-title">First choice (optional)</p>
+        <div className="admin-options-grid">
+          <label className="admin-field">
+            <span>What do you call it?</span>
+            <input value={opt1Name} onChange={(e) => setOpt1Name(e.target.value)} placeholder="e.g. Style, Color" />
+          </label>
+          <label className="admin-field">
+            <span>List the choices, separated by commas</span>
+            <input value={opt1ValuesStr} onChange={(e) => setOpt1ValuesStr(e.target.value)} placeholder="e.g. 1, 2, 3" />
+          </label>
+        </div>
+      </div>
+
+      <div className="admin-option-group">
+        <p className="admin-option-group-title">Second choice (optional)</p>
+        <div className="admin-options-grid">
+          <label className="admin-field">
+            <span>What do you call it?</span>
+            <input
+              value={opt2Name}
+              onChange={(e) => setOpt2Name(e.target.value)}
+              placeholder="e.g. Size"
+              disabled={!opt1Values.length}
+            />
+          </label>
+          <label className="admin-field">
+            <span>List the choices, separated by commas</span>
+            <input
+              value={opt2ValuesStr}
+              onChange={(e) => setOpt2ValuesStr(e.target.value)}
+              placeholder="e.g. 34, 36, 38"
+              disabled={!opt1Values.length}
+            />
+          </label>
+        </div>
+        {!opt1Values.length && (
+          <p className="admin-section-hint">Fill in "First choice" above before adding a second one.</p>
+        )}
       </div>
 
       {opt1Values.length > 0 && images.length > 0 && (
