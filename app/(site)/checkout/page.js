@@ -77,7 +77,7 @@ export default function CheckoutPage() {
     if (unmet.length > 0) {
       const first = unmet[0];
       setError(
-        `${first.productTitle} needs at least ${first.required} in your bag (any size/design) — you have ${first.have}.`
+        `${first.productTitle} needs at least ${first.required} different sizes/styles in your bag — you have ${first.have}.`
       );
       return;
     }
@@ -323,7 +323,8 @@ export default function CheckoutPage() {
           </div>
           {unmetMinimums.map((u) => (
             <p className="checkout-min-qty-notice" key={u.handle}>
-              Add {u.required - u.have} more {u.productTitle} to reach the minimum of {u.required}.
+              Pick {u.required - u.have} more different size/style of {u.productTitle} — it needs at
+              least {u.required} (2 of the same size doesn't count).
             </p>
           ))}
         </div>

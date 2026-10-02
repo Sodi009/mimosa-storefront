@@ -23,7 +23,7 @@ export default function ProductDetail({ product }) {
     });
     return initial;
   });
-  const [qty, setQty] = useState(minimumQuantity);
+  const [qty, setQty] = useState(1);
 
   const selectedVariant = useMemo(
     () => variants.find((v) => variantMatchesSelection(v, selected)),
@@ -51,7 +51,7 @@ export default function ProductDetail({ product }) {
       },
       qty
     );
-    setQty(minimumQuantity);
+    setQty(1);
     openCart();
   }
 
@@ -66,7 +66,7 @@ export default function ProductDetail({ product }) {
         </p>
         {minimumQuantity > 1 && (
           <p className="pdp-min-qty">
-            Minimum order: {minimumQuantity} items — mix any size or design.
+            Minimum order: {minimumQuantity} different sizes/styles — add each to your bag separately.
           </p>
         )}
 
@@ -97,7 +97,7 @@ export default function ProductDetail({ product }) {
         <div className="option-group">
           <p className="option-label">Quantity</p>
           <div className="qty-stepper">
-            <button type="button" className="qty-btn" onClick={() => setQty((q) => Math.max(minimumQuantity, q - 1))}>
+            <button type="button" className="qty-btn" onClick={() => setQty((q) => Math.max(1, q - 1))}>
               −
             </button>
             <span>{qty}</span>

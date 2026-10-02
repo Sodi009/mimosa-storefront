@@ -204,7 +204,7 @@ export default function ProductForm({ product }) {
       </label>
 
       <label className="admin-field">
-        <span>Minimum order quantity</span>
+        <span>Minimum different sizes/styles</span>
         <input
           type="number"
           min="1"
@@ -214,8 +214,8 @@ export default function ProductForm({ product }) {
           style={{ maxWidth: 120 }}
         />
         <span className="admin-section-hint" style={{ margin: "4px 0 0" }}>
-          Leave at 1 for no minimum. Set to 2, 3, etc. to require customers buy at least that many
-          (any mix of size/style counts) before checkout.
+          Leave at 1 for no minimum. Set to 2, 3, etc. to require customers pick at least that many
+          different sizes/styles before checkout — buying 2 of the same one won't count.
         </span>
       </label>
 
