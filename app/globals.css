@@ -1731,6 +1731,7 @@ button {
 
 .admin-product-form {
   max-width: 640px;
+  margin: 0 auto;
 }
 
 .admin-image-grid {
@@ -1947,10 +1948,10 @@ button {
 
 .admin-order-form {
   max-width: 900px;
+  margin: 0 auto 24px;
   border: 1px solid var(--line);
   border-radius: 12px;
   padding: 20px;
-  margin-bottom: 24px;
 }
 
 .admin-order-form-grid {
