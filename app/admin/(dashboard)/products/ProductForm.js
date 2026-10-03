@@ -4,6 +4,7 @@ import { useRef, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { getUploadUrl, saveProductAction } from "../../actions";
 import { supabasePublic } from "@/lib/supabase-public";
+import { compressImage } from "@/lib/compress-image";
 
 const CATEGORIES = [
   { value: "bags", label: "Bags" },
@@ -103,10 +104,11 @@ export default function ProductForm({ product }) {
     setFormError("");
     try {
       for (const file of files) {
-        const { path, token, publicUrl } = await getUploadUrl(file.name);
+        const compressed = await compressImage(file);
+        const { path, token, publicUrl } = await getUploadUrl(compressed.name);
         const { error } = await supabasePublic.storage
           .from("product-images")
-          .uploadToSignedUrl(path, token, file);
+          .uploadToSignedUrl(path, token, compressed);
         if (error) throw new Error(error.message);
         setImages((prev) => [...prev, { url: publicUrl, altText: title }]);
       }
