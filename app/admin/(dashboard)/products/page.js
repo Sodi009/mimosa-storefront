@@ -22,7 +22,7 @@ export default async function AdminProductsPage() {
       {products.length === 0 && <p className="admin-empty">No products yet. Add your first one.</p>}
 
       {products.length > 0 && (
-        <table className="admin-table">
+        <table className="admin-table admin-products-table">
           <thead>
             <tr>
               <th></th>

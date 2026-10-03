@@ -1593,6 +1593,19 @@ button {
   font-size: 14px;
 }
 
+/* The products table only has a few short columns (thumb, title, category,
+   status, actions) — left at 100% width on a wide screen, the browser
+   stretches the gaps between them awkwardly. Cap it to a sane width and
+   pin the actions column close to its content instead of the far edge. */
+.admin-products-table {
+  max-width: 820px;
+}
+
+.admin-products-table .admin-table-actions {
+  width: 1%;
+  white-space: nowrap;
+}
+
 .admin-table th {
   text-align: left;
   font-size: 12px;
