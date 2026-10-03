@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { useCart } from "@/lib/cart-context";
-import { formatPriceRange } from "@/lib/price";
+import { formatApproxPriceRange } from "@/lib/price";
 import ProductGallery from "./ProductGallery";
 
 function variantMatchesSelection(variant, selected) {
@@ -62,7 +62,7 @@ export default function ProductDetail({ product }) {
       <div className="pdp-info">
         <h1>{product.title}</h1>
         <p className="pdp-price">
-          {formatPriceRange(product.priceRange.minVariantPrice, product.priceRange.maxVariantPrice)}
+          {formatApproxPriceRange(product.priceFrom, product.priceTo)}
         </p>
         {minimumQuantity > 1 && (
           <p className="pdp-min-qty">

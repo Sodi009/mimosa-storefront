@@ -95,13 +95,27 @@ export async function saveProductAction(formData) {
   const options = JSON.parse(formData.get("options") || "[]");
   const variants = JSON.parse(formData.get("variants") || "[]");
   const minQuantity = Math.max(1, Number(formData.get("minQuantity")) || 1);
+  const priceFrom = Number(formData.get("priceFrom"));
+  const priceToRaw = formData.get("priceTo");
+  const priceTo = priceToRaw ? Number(priceToRaw) : null;
 
   if (!title) throw new Error("Title is required");
   if (!variants.length) throw new Error("At least one variant is required");
+  if (!priceFrom || priceFrom <= 0) throw new Error("A price is required");
 
   const handle = await uniqueHandle(requestedHandle, id);
 
-  const productRow = { title, handle, category, description, images, options, min_quantity: minQuantity };
+  const productRow = {
+    title,
+    handle,
+    category,
+    description,
+    images,
+    options,
+    min_quantity: minQuantity,
+    price_from: priceFrom,
+    price_to: priceTo,
+  };
 
   let productId = id;
   if (id) {

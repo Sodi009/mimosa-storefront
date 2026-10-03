@@ -44,7 +44,7 @@ function buildCombos(opt1Name, opt1Values, opt2Name, opt2Values) {
 function initVariantsFromProduct(product) {
   const map = {};
   (product?.product_variants || []).forEach((v) => {
-    map[v.title] = { price: String(v.price), inStock: v.stock > 0 };
+    map[v.title] = { inStock: v.stock > 0 };
   });
   return map;
 }
@@ -85,8 +85,19 @@ export default function ProductForm({ product }) {
 
   const [variantValues, setVariantValues] = useState(() => initVariantsFromProduct(product));
   const [optionImageMap, setOptionImageMap] = useState(() => initOptionImageMap(product));
-  const [rangeMin, setRangeMin] = useState("");
-  const [rangeMax, setRangeMax] = useState("");
+
+  // The rough price shown to customers (e.g. "Around AED 25 – 30") — not
+  // tied to any one size/style. The exact price is confirmed with the
+  // customer on WhatsApp, so there's no need to set a price per option.
+  const firstVariantPrice = product?.product_variants?.[0]?.price;
+  const [priceFrom, setPriceFrom] = useState(
+    product?.price_from != null
+      ? String(product.price_from)
+      : firstVariantPrice != null
+      ? String(firstVariantPrice)
+      : ""
+  );
+  const [priceTo, setPriceTo] = useState(product?.price_to != null ? String(product.price_to) : "");
 
   const opt1Values = parseValues(opt1ValuesStr);
   const opt2Values = parseValues(opt2ValuesStr);
@@ -97,30 +108,6 @@ export default function ProductForm({ product }) {
       ...prev,
       [comboTitle]: { ...(prev[comboTitle] || {}), [field]: value },
     }));
-  }
-
-  // Gives each row a random price so the site shows a real "AED 100–150"
-  // range instead of one exact number. "To" is just an optional cap — leave
-  // it blank and a sensible spread is picked automatically around "From" so
-  // there's no need to work out exact min/max numbers by hand.
-  function applyPriceRange() {
-    const min = Number(rangeMin);
-    if (!min || min <= 0) {
-      setFormError("Enter at least a starting price to fill the table.");
-      return;
-    }
-    setFormError("");
-    const explicitMax = Number(rangeMax);
-    const max = explicitMax > min ? explicitMax : min * 1.15;
-
-    setVariantValues((prev) => {
-      const next = { ...prev };
-      combos.forEach((c) => {
-        const price = min + Math.random() * (max - min);
-        next[c.title] = { ...(next[c.title] || {}), price: String(Math.round(price * 100) / 100) };
-      });
-      return next;
-    });
   }
 
   async function handleFiles(e) {
@@ -164,22 +151,25 @@ export default function ProductForm({ product }) {
     if (!title.trim()) return setFormError("Title is required.");
     if (!images.length) return setFormError("Add at least one photo.");
 
+    const from = Number(priceFrom);
+    if (!from || from <= 0) return setFormError("Enter a price.");
+    const to = Number(priceTo);
+    // One internal price per unit (for cart totals/invoices) — the site
+    // shows the rough From/To range, not this exact number.
+    const internalPrice = to > from ? (from + to) / 2 : from;
+
     const variants = combos.map((c) => {
       const v = variantValues[c.title] || {};
       const opt1Value = c.selectedOptions[0]?.value;
       return {
         title: c.title,
         selectedOptions: c.selectedOptions,
-        price: Number(v.price),
+        price: internalPrice,
         stock: v.inStock === false ? 0 : 999,
         currencyCode: "AED",
         imageUrl: (opt1Value && optionImageMap[opt1Value]) || "",
       };
     });
-
-    if (variants.some((v) => !v.price || Number.isNaN(v.price) || v.price <= 0)) {
-      return setFormError("Every size/style needs a price greater than 0.");
-    }
 
     const options = [];
     if (opt1Name && opt1Values.length) options.push({ name: opt1Name, values: opt1Values });
@@ -194,6 +184,8 @@ export default function ProductForm({ product }) {
     fd.set("category", category);
     fd.set("description", description);
     fd.set("minQuantity", String(Math.max(1, Number(minQuantity) || 1)));
+    fd.set("priceFrom", String(from));
+    fd.set("priceTo", to > from ? String(to) : "");
     fd.set("images", JSON.stringify(images));
     fd.set("options", JSON.stringify(options));
     fd.set("variants", JSON.stringify(variants));
@@ -246,6 +238,42 @@ export default function ProductForm({ product }) {
           different sizes/styles before checkout — buying 2 of the same one won't count.
         </span>
       </label>
+
+      <div className="admin-price-range-tool">
+        <p className="admin-option-group-title" style={{ marginBottom: 10 }}>
+          Price shown to customers
+        </p>
+        <div className="admin-price-range-row">
+          <label className="admin-field" style={{ marginBottom: 0 }}>
+            <span>From (AED)</span>
+            <input
+              type="number"
+              min="0"
+              step="0.01"
+              value={priceFrom}
+              onChange={(e) => setPriceFrom(e.target.value)}
+              placeholder="e.g. 25"
+              required
+            />
+          </label>
+          <label className="admin-field" style={{ marginBottom: 0 }}>
+            <span>To (AED, optional)</span>
+            <input
+              type="number"
+              min="0"
+              step="0.01"
+              value={priceTo}
+              onChange={(e) => setPriceTo(e.target.value)}
+              placeholder="e.g. 30"
+            />
+          </label>
+        </div>
+        <p className="admin-section-hint" style={{ margin: "8px 0 0" }}>
+          Customers see a rough price ("Around AED 25 – 30"), not an exact number — same price shown
+          for every size/style. Confirm the real price with the customer on WhatsApp when they order.
+          Leave "To" blank to show one exact price instead of a range.
+        </p>
+      </div>
 
       <div className="admin-field">
         <span>Photos</span>
@@ -341,53 +369,12 @@ export default function ProductForm({ product }) {
         </div>
       )}
 
-      {combos.length > 1 && (
-        <div className="admin-price-range-tool">
-          <p className="admin-option-group-title" style={{ marginBottom: 10 }}>
-            Price range (fills the table below)
-          </p>
-          <div className="admin-price-range-row">
-            <label className="admin-field" style={{ marginBottom: 0 }}>
-              <span>From (AED)</span>
-              <input
-                type="number"
-                min="0"
-                step="0.01"
-                value={rangeMin}
-                onChange={(e) => setRangeMin(e.target.value)}
-                placeholder="e.g. 100"
-              />
-            </label>
-            <label className="admin-field" style={{ marginBottom: 0 }}>
-              <span>To (AED, optional)</span>
-              <input
-                type="number"
-                min="0"
-                step="0.01"
-                value={rangeMax}
-                onChange={(e) => setRangeMax(e.target.value)}
-                placeholder="e.g. 150 — leave blank to vary automatically"
-              />
-            </label>
-            <button type="button" className="btn-secondary" onClick={applyPriceRange}>
-              Apply to all
-            </button>
-          </div>
-          <p className="admin-section-hint" style={{ margin: "8px 0 0" }}>
-            Just type "From" and leave "To" blank — each size/style gets a random price varied
-            automatically around it, so you don't have to work out exact numbers. Fill "To" too if
-            you want to pick the exact range yourself. You can still edit any row by hand afterward.
-          </p>
-        </div>
-      )}
-
       <div className="admin-field">
-        <span>Price {combos.length > 1 ? "per option" : ""}</span>
+        <span>{combos.length > 1 ? "Stock per option" : "In stock"}</span>
         <table className="admin-table admin-variant-table">
           <thead>
             <tr>
               <th>{combos.length > 1 ? "Option" : ""}</th>
-              <th>Price (AED)</th>
               <th>In stock</th>
             </tr>
           </thead>
@@ -398,16 +385,6 @@ export default function ProductForm({ product }) {
               return (
                 <tr key={c.title}>
                   <td>{combos.length > 1 ? c.title : "—"}</td>
-                  <td>
-                    <input
-                      type="number"
-                      min="0"
-                      step="0.01"
-                      value={v.price || ""}
-                      onChange={(e) => updateVariantField(c.title, "price", e.target.value)}
-                      required
-                    />
-                  </td>
                   <td className="admin-instock-cell">
                     <input
                       type="checkbox"

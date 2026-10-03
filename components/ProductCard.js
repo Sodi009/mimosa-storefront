@@ -1,9 +1,7 @@
 import Link from "next/link";
-import { formatPriceRange } from "@/lib/price";
+import { formatApproxPriceRange } from "@/lib/price";
 
 export default function ProductCard({ product }) {
-  const min = product.priceRange?.minVariantPrice;
-  const max = product.priceRange?.maxVariantPrice;
   return (
     <Link href={`/products/${product.handle}`} className="product-card">
       <div className="product-card-image">
@@ -18,7 +16,7 @@ export default function ProductCard({ product }) {
       <div className="product-card-body">
         <p className="product-card-title">{product.title}</p>
         {product.availableForSale ? (
-          <p className="product-card-price">{formatPriceRange(min, max)}</p>
+          <p className="product-card-price">{formatApproxPriceRange(product.priceFrom, product.priceTo)}</p>
         ) : (
           <p className="sold-out-tag">Sold out</p>
         )}
