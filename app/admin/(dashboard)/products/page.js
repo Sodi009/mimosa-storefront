@@ -46,8 +46,10 @@ export default async function AdminProductsPage() {
                   <td className="admin-table-muted">{p.category}</td>
                   <td className={inStock ? "" : "admin-stock-zero"}>{inStock ? "In stock" : "Sold out"}</td>
                   <td className="admin-table-actions">
-                    <Link href={`/admin/products/${p.id}/edit`}>Edit</Link>
-                    <DeleteProductButton id={p.id} title={p.title} />
+                    <span className="admin-table-actions-row">
+                      <Link href={`/admin/products/${p.id}/edit`}>Edit</Link>
+                      <DeleteProductButton id={p.id} title={p.title} />
+                    </span>
                   </td>
                 </tr>
               );

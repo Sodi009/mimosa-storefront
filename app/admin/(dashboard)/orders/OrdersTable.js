@@ -89,12 +89,14 @@ function OrderRow({ order, selectable, selected, onToggleSelect, onEdit }) {
         </select>
       </td>
       <td className="admin-table-actions">
-        <button type="button" className="admin-link-btn" onClick={() => onEdit(order)} disabled={pending}>
-          Edit
-        </button>
-        <button type="button" className="admin-delete-btn" onClick={handleDelete} disabled={pending}>
-          Delete
-        </button>
+        <span className="admin-table-actions-row">
+          <button type="button" className="admin-link-btn" onClick={() => onEdit(order)} disabled={pending}>
+            Edit
+          </button>
+          <button type="button" className="admin-delete-btn" onClick={handleDelete} disabled={pending}>
+            Delete
+          </button>
+        </span>
       </td>
     </tr>
   );

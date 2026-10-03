@@ -1646,10 +1646,13 @@ button {
 }
 
 .admin-table-actions {
+  white-space: nowrap;
+}
+
+.admin-table-actions-row {
   display: flex;
   gap: 12px;
   align-items: center;
-  white-space: nowrap;
 }
 
 .admin-table-actions a {
