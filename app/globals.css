@@ -1819,6 +1819,33 @@ button {
   gap: 0 16px;
 }
 
+.admin-price-range-tool {
+  border: 1px solid var(--brass);
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 16px;
+  background: rgba(107, 98, 85, 0.05);
+}
+
+.admin-price-range-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr auto;
+  gap: 12px;
+  align-items: end;
+}
+
+.admin-price-range-row .btn-secondary {
+  padding: 10px 20px;
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+@media (max-width: 700px) {
+  .admin-price-range-row {
+    grid-template-columns: 1fr;
+  }
+}
+
 .admin-variant-table input[type="number"],
 .admin-variant-table input[type="text"] {
   width: 100%;

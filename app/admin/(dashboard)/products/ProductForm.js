@@ -85,6 +85,8 @@ export default function ProductForm({ product }) {
 
   const [variantValues, setVariantValues] = useState(() => initVariantsFromProduct(product));
   const [optionImageMap, setOptionImageMap] = useState(() => initOptionImageMap(product));
+  const [rangeMin, setRangeMin] = useState("");
+  const [rangeMax, setRangeMax] = useState("");
 
   const opt1Values = parseValues(opt1ValuesStr);
   const opt2Values = parseValues(opt2ValuesStr);
@@ -95,6 +97,29 @@ export default function ProductForm({ product }) {
       ...prev,
       [comboTitle]: { ...(prev[comboTitle] || {}), [field]: value },
     }));
+  }
+
+  // One price for every row (Max left blank), or an even spread from Min to
+  // Max across all rows so the site shows a real "AED 100–150" range instead
+  // of one exact number — without typing each row by hand.
+  function applyPriceRange() {
+    const min = Number(rangeMin);
+    if (!min || min <= 0) {
+      setFormError("Enter at least a starting price to fill the table.");
+      return;
+    }
+    setFormError("");
+    const max = Number(rangeMax) || min;
+    const count = combos.length;
+
+    setVariantValues((prev) => {
+      const next = { ...prev };
+      combos.forEach((c, i) => {
+        const price = count > 1 ? min + ((max - min) * i) / (count - 1) : min;
+        next[c.title] = { ...(next[c.title] || {}), price: String(Math.round(price * 100) / 100) };
+      });
+      return next;
+    });
   }
 
   async function handleFiles(e) {
@@ -312,6 +337,46 @@ export default function ProductForm({ product }) {
               </div>
             </div>
           ))}
+        </div>
+      )}
+
+      {combos.length > 1 && (
+        <div className="admin-price-range-tool">
+          <p className="admin-option-group-title" style={{ marginBottom: 10 }}>
+            Price range (fills the table below)
+          </p>
+          <div className="admin-price-range-row">
+            <label className="admin-field" style={{ marginBottom: 0 }}>
+              <span>From (AED)</span>
+              <input
+                type="number"
+                min="0"
+                step="0.01"
+                value={rangeMin}
+                onChange={(e) => setRangeMin(e.target.value)}
+                placeholder="e.g. 100"
+              />
+            </label>
+            <label className="admin-field" style={{ marginBottom: 0 }}>
+              <span>To (AED, optional)</span>
+              <input
+                type="number"
+                min="0"
+                step="0.01"
+                value={rangeMax}
+                onChange={(e) => setRangeMax(e.target.value)}
+                placeholder="e.g. 150 — leave blank for one price"
+              />
+            </label>
+            <button type="button" className="btn-secondary" onClick={applyPriceRange}>
+              Apply to all
+            </button>
+          </div>
+          <p className="admin-section-hint" style={{ margin: "8px 0 0" }}>
+            Leave "To" blank to set the same price everywhere. Fill both to spread prices evenly
+            across the sizes/styles below, so customers see a range like "AED 100–150" instead of
+            one exact price. You can still edit any row by hand afterward.
+          </p>
         </div>
       )}
 
