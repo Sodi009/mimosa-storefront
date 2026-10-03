@@ -1,6 +1,12 @@
 import { supabaseAdmin } from "@/lib/supabase-admin";
 import OrdersTable from "./OrdersTable";
 
+// Orders can be written by checkout (a public Server Action with no
+// revalidatePath call back to this page) as well as by the admin actions on
+// this page itself, so this page can't rely on on-demand revalidation alone
+// to know when to refresh — it needs to read fresh data on every visit.
+export const dynamic = "force-dynamic";
+
 function orderNumber(orderNo) {
   const m = (orderNo || "").match(/(\d+)/);
   return m ? Number.parseInt(m[1], 10) : 0;
