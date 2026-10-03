@@ -99,9 +99,9 @@ export default function ProductForm({ product }) {
     }));
   }
 
-  // One price for every row (Max left blank), or an even spread from Min to
-  // Max across all rows so the site shows a real "AED 100–150" range instead
-  // of one exact number — without typing each row by hand.
+  // One price for every row (Max left blank), or a random price within
+  // Min–Max for each row so the site shows a real "AED 100–150" range
+  // instead of one exact number — without typing each row by hand.
   function applyPriceRange() {
     const min = Number(rangeMin);
     if (!min || min <= 0) {
@@ -110,12 +110,11 @@ export default function ProductForm({ product }) {
     }
     setFormError("");
     const max = Number(rangeMax) || min;
-    const count = combos.length;
 
     setVariantValues((prev) => {
       const next = { ...prev };
-      combos.forEach((c, i) => {
-        const price = count > 1 ? min + ((max - min) * i) / (count - 1) : min;
+      combos.forEach((c) => {
+        const price = max > min ? min + Math.random() * (max - min) : min;
         next[c.title] = { ...(next[c.title] || {}), price: String(Math.round(price * 100) / 100) };
       });
       return next;
@@ -373,9 +372,9 @@ export default function ProductForm({ product }) {
             </button>
           </div>
           <p className="admin-section-hint" style={{ margin: "8px 0 0" }}>
-            Leave "To" blank to set the same price everywhere. Fill both to spread prices evenly
-            across the sizes/styles below, so customers see a range like "AED 100–150" instead of
-            one exact price. You can still edit any row by hand afterward.
+            Leave "To" blank to set the same price everywhere. Fill both to give each size/style a
+            random price somewhere between them, so customers see a range like "AED 100–150"
+            instead of one exact price. You can still edit any row by hand afterward.
           </p>
         </div>
       )}
