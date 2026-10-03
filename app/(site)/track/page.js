@@ -9,13 +9,15 @@ async function downloadInvoice(order) {
   const names = (order.item || "").split(", ").filter(Boolean);
   const prices = (order.price || "").toString().split(", ");
   const itemsHtml = names
-    .map(
-      (n, i) => `
+    .map((n, i) => {
+      const p = Number.parseFloat(prices[i]);
+      const priceText = p ? `${p.toFixed(2)} AED` : "To be confirmed";
+      return `
       <div style="display:flex;justify-content:space-between;margin-bottom:12px;font-size:14px;border-bottom:1px solid #f9f9f9;padding-bottom:5px;">
         <span>${n.split(" (x")[0]}</span>
-        <span style="font-weight:600;">${(Number.parseFloat(prices[i]) || 0).toFixed(2)} AED</span>
-      </div>`
-    )
+        <span style="font-weight:600;">${priceText}</span>
+      </div>`;
+    })
     .join("");
 
   const wrap = document.createElement("div");
@@ -34,7 +36,7 @@ async function downloadInvoice(order) {
     <div style="margin-bottom:20px;">${itemsHtml}</div>
     <div style="background:#f9f9f9;padding:20px;border-radius:12px;">
       <div style="display:flex;justify-content:space-between;font-weight:800;font-size:18px;">
-        <span>TOTAL</span><span>${(Number.parseFloat(order.amount) || 0).toFixed(2)} AED</span>
+        <span>TOTAL</span><span>${Number.parseFloat(order.amount) ? `${Number.parseFloat(order.amount).toFixed(2)} AED` : "To be confirmed"}</span>
       </div>
       <div style="font-size:11px;color:#888;margin-top:5px;">Payment: ${order.payment}</div>
     </div>
@@ -71,9 +73,11 @@ function currentStageFromStatus(status) {
   return null;
 }
 
-function formatMoney(amount) {
+// The price isn't set until the admin confirms it with the customer on
+// WhatsApp — show that instead of a misleading "0.00 AED" in the meantime.
+function formatMoneyOrPending(amount) {
   const n = parseFloat(amount);
-  return isNaN(n) ? amount : n.toFixed(2);
+  return !n ? "To be confirmed" : `${n.toFixed(2)} AED`;
 }
 
 export default function TrackPage() {
@@ -226,12 +230,12 @@ export default function TrackPage() {
                     {itemNames.map((name, i) => (
                       <div className="track-item-row" key={i}>
                         <span>{name.split(" (x")[0]}</span>
-                        <span>{formatMoney(itemPrices[i] || 0)} AED</span>
+                        <span>{formatMoneyOrPending(itemPrices[i])}</span>
                       </div>
                     ))}
                     <div className="track-item-row track-item-total">
                       <span>Total</span>
-                      <span>{formatMoney(order.amount)} AED</span>
+                      <span>{formatMoneyOrPending(order.amount)}</span>
                     </div>
                     <div className="track-item-row track-item-payment">
                       <span>Payment</span>

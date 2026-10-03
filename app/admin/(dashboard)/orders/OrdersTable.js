@@ -71,7 +71,13 @@ function OrderRow({ order, selectable, selected, onToggleSelect, onEdit }) {
         {order.phone && <div className="admin-table-muted">{order.phone}</div>}
         {!order.area && !order.address && !order.phone && <span className="admin-table-muted">—</span>}
       </td>
-      <td>{Number(order.amount).toFixed(2)} AED</td>
+      <td>
+        {Number(order.amount) > 0 ? (
+          `${Number(order.amount).toFixed(2)} AED`
+        ) : (
+          <span className="admin-table-muted">— not confirmed yet</span>
+        )}
+      </td>
       <td>
         <span className={isCOD ? "admin-payment-cod" : "admin-payment-paid"}>{isCOD ? "COD" : "PAID"}</span>
       </td>

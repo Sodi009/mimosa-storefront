@@ -33,7 +33,7 @@ const DUBAI_AREAS = [
 ];
 
 export default function CheckoutPage() {
-  const { lines, subtotal } = useCart();
+  const { lines } = useCart();
   const [type, setType] = useState("delivery");
   const [payment, setPayment] = useState("cod");
   const [name, setName] = useState("");
@@ -107,14 +107,17 @@ export default function CheckoutPage() {
           };
 
     // Same item/price string shape the Admin panel's own order form saves
-    // ("Name (xQty)" joined by ", ", unit prices joined the same way).
+    // ("Name (xQty)" joined by ", ", unit prices joined the same way). Prices
+    // are left blank here — the customer never saw a firm number, so the
+    // admin panel shouldn't pretend one was agreed on. The admin fills in
+    // the real price per item once it's confirmed with the customer.
     const itemStr = lines
       .map((l) => {
         const variantPart = l.variantTitle && l.variantTitle !== "Default Title" ? ` - ${l.variantTitle}` : "";
         return `${l.productTitle}${variantPart} (x${l.quantity})`;
       })
       .join(", ");
-    const priceStr = lines.map((l) => l.price).join(", ");
+    const priceStr = lines.map(() => "").join(", ");
     const totalQty = lines.reduce((sum, l) => sum + l.quantity, 0);
 
     const addressLine =
@@ -131,7 +134,6 @@ export default function CheckoutPage() {
       item: itemStr,
       price: priceStr,
       qty: totalQty,
-      amount: subtotal.toFixed(2),
       payment: payment === "cod" ? "CASH ON DELIVERY" : "PAID ONLINE",
       area: type === "delivery" ? area : "",
       address: addressLine,
