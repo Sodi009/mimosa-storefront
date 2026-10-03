@@ -99,9 +99,10 @@ export default function ProductForm({ product }) {
     }));
   }
 
-  // One price for every row (Max left blank), or a random price within
-  // Min–Max for each row so the site shows a real "AED 100–150" range
-  // instead of one exact number — without typing each row by hand.
+  // Gives each row a random price so the site shows a real "AED 100–150"
+  // range instead of one exact number. "To" is just an optional cap — leave
+  // it blank and a sensible spread is picked automatically around "From" so
+  // there's no need to work out exact min/max numbers by hand.
   function applyPriceRange() {
     const min = Number(rangeMin);
     if (!min || min <= 0) {
@@ -109,12 +110,13 @@ export default function ProductForm({ product }) {
       return;
     }
     setFormError("");
-    const max = Number(rangeMax) || min;
+    const explicitMax = Number(rangeMax);
+    const max = explicitMax > min ? explicitMax : min * 1.15;
 
     setVariantValues((prev) => {
       const next = { ...prev };
       combos.forEach((c) => {
-        const price = max > min ? min + Math.random() * (max - min) : min;
+        const price = min + Math.random() * (max - min);
         next[c.title] = { ...(next[c.title] || {}), price: String(Math.round(price * 100) / 100) };
       });
       return next;
@@ -364,7 +366,7 @@ export default function ProductForm({ product }) {
                 step="0.01"
                 value={rangeMax}
                 onChange={(e) => setRangeMax(e.target.value)}
-                placeholder="e.g. 150 — leave blank for one price"
+                placeholder="e.g. 150 — leave blank to vary automatically"
               />
             </label>
             <button type="button" className="btn-secondary" onClick={applyPriceRange}>
@@ -372,9 +374,9 @@ export default function ProductForm({ product }) {
             </button>
           </div>
           <p className="admin-section-hint" style={{ margin: "8px 0 0" }}>
-            Leave "To" blank to set the same price everywhere. Fill both to give each size/style a
-            random price somewhere between them, so customers see a range like "AED 100–150"
-            instead of one exact price. You can still edit any row by hand afterward.
+            Just type "From" and leave "To" blank — each size/style gets a random price varied
+            automatically around it, so you don't have to work out exact numbers. Fill "To" too if
+            you want to pick the exact range yourself. You can still edit any row by hand afterward.
           </p>
         </div>
       )}
