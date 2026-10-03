@@ -1599,6 +1599,7 @@ button {
    pin the actions column close to its content instead of the far edge. */
 .admin-products-table {
   max-width: 820px;
+  margin: 0 auto;
 }
 
 .admin-products-table .admin-table-actions {
