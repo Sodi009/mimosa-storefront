@@ -32,15 +32,8 @@ const DUBAI_AREAS = [
   "Other",
 ];
 
-function formatMoney(amount, currencyCode) {
-  return new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: currencyCode || "USD",
-  }).format(amount);
-}
-
 export default function CheckoutPage() {
-  const { lines, subtotal, currencyCode } = useCart();
+  const { lines, subtotal } = useCart();
   const [type, setType] = useState("delivery");
   const [payment, setPayment] = useState("cod");
   const [name, setName] = useState("");
@@ -145,7 +138,7 @@ export default function CheckoutPage() {
       phone: fulfillment.phone,
     }).catch((err) => console.error("Order save failed:", err));
 
-    const url = getWhatsAppCheckoutUrl(lines, subtotal, currencyCode, fulfillment);
+    const url = getWhatsAppCheckoutUrl(lines, fulfillment);
     setSubmitting(false);
 
     if (whatsappWindow) {
@@ -314,13 +307,9 @@ export default function CheckoutPage() {
                 {" "}
                 x{line.quantity}
               </span>
-              <span>{formatMoney(line.price * line.quantity, line.currencyCode)}</span>
             </div>
           ))}
-          <div className="track-item-row track-item-total">
-            <span>Total</span>
-            <span>{formatMoney(subtotal, currencyCode)}</span>
-          </div>
+          <p className="checkout-price-note">Price to be confirmed on WhatsApp</p>
           {unmetMinimums.map((u) => (
             <p className="checkout-min-qty-notice" key={u.handle}>
               Pick {u.required - u.have} more different size/style of {u.productTitle} — it needs at
