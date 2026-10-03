@@ -3,6 +3,55 @@
 import { useEffect, useState } from "react";
 import { trackOrder } from "@/lib/orders";
 
+async function downloadInvoice(order) {
+  const html2canvas = (await import("html2canvas")).default;
+
+  const names = (order.item || "").split(", ").filter(Boolean);
+  const prices = (order.price || "").toString().split(", ");
+  const itemsHtml = names
+    .map(
+      (n, i) => `
+      <div style="display:flex;justify-content:space-between;margin-bottom:12px;font-size:14px;border-bottom:1px solid #f9f9f9;padding-bottom:5px;">
+        <span>${n.split(" (x")[0]}</span>
+        <span style="font-weight:600;">${(Number.parseFloat(prices[i]) || 0).toFixed(2)} AED</span>
+      </div>`
+    )
+    .join("");
+
+  const wrap = document.createElement("div");
+  wrap.style.cssText =
+    "position:fixed;left:-9999px;width:500px;background:#fff;padding:40px;color:#1a1a1a;border:1px solid #eee;font-family:sans-serif;";
+  wrap.innerHTML = `
+    <div style="text-align:center;margin-bottom:30px;">
+      <img src="${window.location.origin}/icon.jpg" style="width:70px;height:70px;border-radius:50%;margin-bottom:10px;border:1px solid #eee;object-fit:cover;">
+      <div style="font-size:22px;font-weight:800;letter-spacing:2px;">MIMOSA BKK</div>
+      <div style="font-size:10px;color:#aaa;text-transform:uppercase;margin-top:4px;">Official Invoice</div>
+    </div>
+    <div style="display:flex;justify-content:space-between;margin-bottom:20px;font-size:12px;color:#555;">
+      <div><strong>Billed To:</strong><br>${order.name}</div>
+      <div style="text-align:right;"><strong>Order ID:</strong> ${order.no}<br><strong>Date:</strong> ${new Date().toLocaleDateString("en-GB")}</div>
+    </div>
+    <div style="margin-bottom:20px;">${itemsHtml}</div>
+    <div style="background:#f9f9f9;padding:20px;border-radius:12px;">
+      <div style="display:flex;justify-content:space-between;font-weight:800;font-size:18px;">
+        <span>TOTAL</span><span>${(Number.parseFloat(order.amount) || 0).toFixed(2)} AED</span>
+      </div>
+      <div style="font-size:11px;color:#888;margin-top:5px;">Payment: ${order.payment}</div>
+    </div>
+    <div style="text-align:center;margin-top:40px;font-size:10px;color:#ccc;text-transform:uppercase;letter-spacing:1px;">Thank you for your order</div>
+  `;
+
+  document.body.appendChild(wrap);
+  await new Promise((resolve) => setTimeout(resolve, 100));
+  const canvas = await html2canvas(wrap, { useCORS: true, scale: 2 });
+  wrap.remove();
+
+  const link = document.createElement("a");
+  link.download = `Invoice_Mimosa_${order.no}.png`;
+  link.href = canvas.toDataURL("image/png");
+  link.click();
+}
+
 const STAGES = ["Preparing", "Pickup", "Shipped Out", "Out For delivery", "Delivered"];
 const STAGE_LABELS = {
   Preparing: "Order processed",
@@ -191,6 +240,14 @@ export default function TrackPage() {
                       </span>
                     </div>
                   </div>
+
+                  <button
+                    type="button"
+                    className="btn-invoice"
+                    onClick={() => downloadInvoice(order)}
+                  >
+                    Download invoice
+                  </button>
                 </>
               )}
             </div>

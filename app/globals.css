@@ -1498,6 +1498,23 @@ button {
   font-weight: 700;
 }
 
+.btn-invoice {
+  display: block;
+  width: 100%;
+  margin-top: 16px;
+  background: var(--ink);
+  color: var(--bg);
+  border: none;
+  padding: 13px;
+  font-size: 13px;
+  border-radius: 10px;
+  transition: opacity 0.2s ease;
+}
+
+.btn-invoice:hover {
+  opacity: 0.85;
+}
+
 /* ---------- Admin ---------- */
 
 .admin-shell {
