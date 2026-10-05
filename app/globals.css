@@ -1096,6 +1096,9 @@ button {
   line-height: 1.7;
   margin-bottom: 28px;
   max-width: 46ch;
+  /* Preserve the line breaks the admin typed in the description textarea —
+     plain text collapses them into a single run-on paragraph otherwise. */
+  white-space: pre-line;
 }
 
 .pdp-min-qty {
