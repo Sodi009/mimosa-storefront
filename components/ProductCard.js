@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { formatApproxPriceRange } from "@/lib/price";
 
-const NEW_WITHIN_DAYS = 14;
+const NEW_WITHIN_DAYS = 2;
 
 function isNew(createdAt) {
   if (!createdAt) return false;
