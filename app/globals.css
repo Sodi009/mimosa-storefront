@@ -627,6 +627,15 @@ button {
   font-size: 13px;
 }
 
+.guide-step-img {
+  display: block;
+  width: 100%;
+  max-width: 320px;
+  margin-top: 12px;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+}
+
 .guide-faq {
   display: flex;
   flex-direction: column;

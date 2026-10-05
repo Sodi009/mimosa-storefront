@@ -1,3 +1,5 @@
+const GUIDE_IMG = "https://ehxbmedebnlcadonpksh.supabase.co/storage/v1/object/public/guide-images";
+
 export const metadata = {
   title: "How to shop with us — Mimosa BKK",
 };
@@ -21,6 +23,7 @@ export default function GuidePage() {
               Open any product to see its photos, description, and the sizes/styles currently in
               stock. Tap one to select it, then set how many you want with the quantity stepper.
             </p>
+            <img className="guide-step-img" src={`${GUIDE_IMG}/guide-1-browse.png`} alt="Product page with size/style options" />
           </div>
         </div>
 
@@ -33,6 +36,7 @@ export default function GuidePage() {
               way; a few products need more than one different size/style before checkout, and
               that's called out right on the product page when it applies.
             </p>
+            <img className="guide-step-img" src={`${GUIDE_IMG}/guide-2-addedtocart.png`} alt="Cart icon showing an item just added" />
           </div>
         </div>
 
@@ -44,6 +48,7 @@ export default function GuidePage() {
               From the cart, go to checkout and choose delivery or pickup, cash on delivery or
               bank transfer, and your name and contact details.
             </p>
+            <img className="guide-step-img" src={`${GUIDE_IMG}/guide-3-checkout.png`} alt="Checkout form with fulfillment and payment options" />
           </div>
         </div>
 
@@ -55,6 +60,7 @@ export default function GuidePage() {
               Checkout turns everything into a message and opens WhatsApp with it ready to go —
               you just hit send from there.
             </p>
+            <img className="guide-step-img" src={`${GUIDE_IMG}/guide-5-whatsapp.png`} alt="Pre-filled order message open in WhatsApp" />
           </div>
         </div>
 
@@ -121,6 +127,7 @@ export default function GuidePage() {
             Use the Track tab to look up your order by order ID or name, see its current status,
             and download an invoice once it's confirmed.
           </p>
+          <img className="guide-step-img" src={`${GUIDE_IMG}/guide-4-track.png`} alt="Track order search page" />
         </div>
 
         <div className="guide-faq-item">
