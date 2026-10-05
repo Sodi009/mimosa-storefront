@@ -334,52 +334,56 @@ button {
 
 /* ---------- Bottom nav (mobile) ---------- */
 
+/* A floating, icon-only pill rather than a full-width docked bar — the
+   dark fill is var(--ink), the same near-black already used for primary
+   buttons, so it stays on-palette rather than introducing a new color. */
 .bottom-nav {
   display: none;
 }
 
 @media (max-width: 700px) {
   body {
-    padding-bottom: 64px;
+    padding-bottom: 88px;
   }
 
   .bottom-nav {
     display: flex;
     position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
+    left: 50%;
+    bottom: calc(16px + env(safe-area-inset-bottom));
+    transform: translateX(-50%);
     z-index: 45;
-    justify-content: space-around;
+    justify-content: center;
     align-items: center;
-    /* Solid, same reasoning as the header/cart drawer: this sits over
-       scrolling page content and must stay legible without relying on
-       backdrop-filter rendering. */
-    background: var(--bg);
-    border-top: 1px solid var(--line);
-    padding: 6px 4px calc(6px + env(safe-area-inset-bottom));
+    gap: 4px;
+    background: var(--ink);
+    border-radius: 999px;
+    padding: 8px;
+    box-shadow: 0 10px 30px rgba(28, 26, 23, 0.28);
   }
 }
 
 .bottom-nav-item {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: 2px;
-  flex: 1;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 999px;
   background: none;
   border: none;
-  color: var(--muted);
-  font-size: 11px;
-  padding: 4px 0;
+  color: rgba(245, 241, 234, 0.65);
+  transition: background 0.15s ease, color 0.15s ease;
 }
 
 .bottom-nav-item.active {
-  color: var(--ink);
+  color: var(--bg);
+  background: rgba(245, 241, 234, 0.18);
 }
 
 .bottom-nav-cart-icon-wrap {
   position: relative;
+  display: flex;
 }
 
 .bottom-nav-cart-badge {
@@ -398,7 +402,7 @@ button {
   font-weight: 700;
   line-height: 1;
   border-radius: 999px;
-  border: 2px solid var(--bg);
+  border: 2px solid var(--ink);
 }
 
 /* ---------- Hero ---------- */
