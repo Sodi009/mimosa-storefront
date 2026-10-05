@@ -93,7 +93,11 @@ const CATEGORIES = [
     name: "Sisterhood",
     handle: "sisterhood",
     icon: (
-      <path d="M12 2.5 14.2 8.8 21 9l-5.4 4.4L17.6 20 12 16.3 6.4 20l2-6.6L3 9l6.8-.2 2.2-6.3Z" />
+      <>
+        <circle cx="8" cy="11" r="4.3" />
+        <circle cx="16" cy="11" r="4.3" />
+        <path d="M11.3 9.5h1.4M6 7 4.5 2M18 7 19.5 2" />
+      </>
     ),
   },
   {
