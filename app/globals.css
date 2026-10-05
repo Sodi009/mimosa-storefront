@@ -5,6 +5,8 @@
   --brass: #6b6255;
   --line: #e4ddd0;
   --sage: #5c7a5e;
+  --sale: #d0393f;
+  --sale-bg: #fbe9e9;
   --font-display: "Playfair Display", Georgia, serif;
   --font-body: "Inter", -apple-system, sans-serif;
 
@@ -307,6 +309,75 @@ button {
   }
 }
 
+/* ---------- Bottom nav (mobile) ---------- */
+
+.bottom-nav {
+  display: none;
+}
+
+@media (max-width: 700px) {
+  body {
+    padding-bottom: 64px;
+  }
+
+  .bottom-nav {
+    display: flex;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 45;
+    justify-content: space-around;
+    align-items: center;
+    /* Solid, same reasoning as the header/cart drawer: this sits over
+       scrolling page content and must stay legible without relying on
+       backdrop-filter rendering. */
+    background: var(--bg);
+    border-top: 1px solid var(--line);
+    padding: 6px 4px calc(6px + env(safe-area-inset-bottom));
+  }
+}
+
+.bottom-nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  flex: 1;
+  background: none;
+  border: none;
+  color: var(--muted);
+  font-size: 11px;
+  padding: 4px 0;
+}
+
+.bottom-nav-item.active {
+  color: var(--ink);
+}
+
+.bottom-nav-cart-icon-wrap {
+  position: relative;
+}
+
+.bottom-nav-cart-badge {
+  position: absolute;
+  top: -6px;
+  right: -8px;
+  min-width: 16px;
+  height: 16px;
+  padding: 0 3px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--sale);
+  color: #fff;
+  font-size: 9px;
+  font-weight: 700;
+  line-height: 1;
+  border-radius: 999px;
+  border: 2px solid var(--bg);
+}
+
 /* ---------- Hero ---------- */
 
 .hero {
@@ -409,6 +480,50 @@ button {
   .hero-image {
     max-width: 320px;
     margin: 0 auto;
+  }
+}
+
+/* ---------- Promo banner ---------- */
+
+.promo-banner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 24px 0;
+  padding: 14px 20px;
+  border-radius: 14px;
+  background: var(--sale-bg);
+  border: 1px solid var(--sale);
+  color: var(--ink);
+}
+
+.promo-banner-tag {
+  flex-shrink: 0;
+  background: var(--sale);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  border-radius: 999px;
+}
+
+.promo-banner-text {
+  flex: 1;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.promo-banner-arrow {
+  flex-shrink: 0;
+  color: var(--sale);
+  font-size: 18px;
+}
+
+@media (max-width: 600px) {
+  .promo-banner-text {
+    font-size: 13px;
   }
 }
 
@@ -566,7 +681,15 @@ button {
 @media (max-width: 600px) {
   .product-grid {
     grid-template-columns: repeat(2, 1fr);
-    gap: 12px;
+    gap: 8px;
+  }
+
+  .product-card {
+    border-radius: 10px;
+  }
+
+  .product-card-body {
+    padding: 0 8px;
   }
 }
 
@@ -589,10 +712,25 @@ button {
 }
 
 .product-card-image {
+  position: relative;
   aspect-ratio: 3 / 4;
   background: var(--line);
   overflow: hidden;
   margin-bottom: 10px;
+}
+
+.product-card-badge {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  background: var(--sale);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  border-radius: 999px;
 }
 
 .product-card-image img {

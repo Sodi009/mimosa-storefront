@@ -4,6 +4,7 @@ import AnnouncementBar from "@/components/AnnouncementBar";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import CartDrawer from "@/components/CartDrawer";
+import BottomNav from "@/components/BottomNav";
 
 export default function SiteLayout({ children }) {
   return (
@@ -17,6 +18,7 @@ export default function SiteLayout({ children }) {
       {children}
       <Footer />
       <CartDrawer />
+      <BottomNav />
     </CartProvider>
   );
 }

@@ -21,8 +21,18 @@ const FILTER_CATEGORIES = [
   { name: "Wallet", handle: "wallet" },
 ];
 
-export default async function CollectionPage({ params }) {
+const SORT_OPTIONS = [
+  { value: "newest", label: "Newest" },
+  { value: "price-asc", label: "Price: Low to High" },
+  { value: "price-desc", label: "Price: High to Low" },
+];
+
+export default async function CollectionPage({ params, searchParams }) {
   const { handle } = await params;
+  const sp = await searchParams;
+  const sort = SORT_OPTIONS.some((o) => o.value === sp?.sort) ? sp.sort : "newest";
+  const instockOnly = sp?.instock === "1";
+
   let title = handle;
   let products = [];
 
@@ -47,6 +57,27 @@ export default async function CollectionPage({ params }) {
     );
   }
 
+  if (instockOnly) {
+    products = products.filter((p) => p.availableForSale);
+  }
+
+  if (sort === "price-asc" || sort === "price-desc") {
+    const dir = sort === "price-asc" ? 1 : -1;
+    products = [...products].sort(
+      (a, b) => dir * (Number(a.priceFrom?.amount ?? 0) - Number(b.priceFrom?.amount ?? 0))
+    );
+  }
+
+  function filterUrl({ sort: sortOverride, instock: instockOverride } = {}) {
+    const nextSort = sortOverride !== undefined ? sortOverride : sort;
+    const nextInstock = instockOverride !== undefined ? instockOverride : instockOnly;
+    const qs = new URLSearchParams();
+    if (nextSort !== "newest") qs.set("sort", nextSort);
+    if (nextInstock) qs.set("instock", "1");
+    const query = qs.toString();
+    return query ? `/collections/${handle}?${query}` : `/collections/${handle}`;
+  }
+
   return (
     <main className="wrap">
       <div className="section-head">
@@ -62,6 +93,23 @@ export default async function CollectionPage({ params }) {
             {cat.name}
           </a>
         ))}
+      </div>
+      <div className="category-filter" style={{ paddingBottom: 24 }}>
+        {SORT_OPTIONS.map((opt) => (
+          <a
+            key={opt.value}
+            href={filterUrl({ sort: opt.value })}
+            className={`category-filter-pill ${sort === opt.value ? "selected" : ""}`}
+          >
+            {opt.label}
+          </a>
+        ))}
+        <a
+          href={filterUrl({ instock: !instockOnly })}
+          className={`category-filter-pill ${instockOnly ? "selected" : ""}`}
+        >
+          In stock only
+        </a>
       </div>
       <div className="product-grid">
         {products.map((product) => (
