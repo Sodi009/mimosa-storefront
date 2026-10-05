@@ -343,7 +343,7 @@ button {
 
 @media (max-width: 700px) {
   body {
-    padding-bottom: 88px;
+    padding-bottom: 104px;
   }
 
   .bottom-nav {
@@ -355,10 +355,10 @@ button {
     z-index: 45;
     justify-content: center;
     align-items: center;
-    gap: 4px;
-    background: var(--ink);
+    gap: 6px;
+    background: var(--brass);
     border-radius: 999px;
-    padding: 8px;
+    padding: 10px;
     box-shadow: 0 10px 30px rgba(28, 26, 23, 0.28);
   }
 }
@@ -367,13 +367,18 @@ button {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 44px;
-  height: 44px;
+  width: 54px;
+  height: 54px;
   border-radius: 999px;
   background: none;
   border: none;
-  color: rgba(245, 241, 234, 0.65);
+  color: rgba(245, 241, 234, 0.75);
   transition: background 0.15s ease, color 0.15s ease;
+}
+
+.bottom-nav-item svg {
+  width: 26px;
+  height: 26px;
 }
 
 .bottom-nav-item.active {
@@ -402,7 +407,7 @@ button {
   font-weight: 700;
   line-height: 1;
   border-radius: 999px;
-  border: 2px solid var(--ink);
+  border: 2px solid var(--brass);
 }
 
 /* ---------- Hero ---------- */
