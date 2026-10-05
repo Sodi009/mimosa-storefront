@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import { useCart } from "@/lib/cart-context";
 import { formatApproxPriceRange } from "@/lib/price";
+import { flyToCart } from "@/lib/fly-to-cart";
 import ProductGallery from "./ProductGallery";
 
 function variantMatchesSelection(variant, selected) {
@@ -10,7 +11,7 @@ function variantMatchesSelection(variant, selected) {
 }
 
 export default function ProductDetail({ product }) {
-  const { addItem, openCart } = useCart();
+  const { addItem } = useCart();
   const images = product.images.edges.map((e) => e.node);
   const variants = product.variants.edges.map((e) => e.node);
   const hasRealOptions = product.options.some((o) => o.name !== "Title" && o.values.length > 1);
@@ -38,6 +39,12 @@ export default function ProductDetail({ product }) {
 
   function handleAdd() {
     if (!selectedVariant || !selectedVariant.availableForSale) return;
+
+    const imgEl = document.querySelector(".pdp-gallery-main img");
+    if (imgEl) {
+      flyToCart(imgEl.src, imgEl.getBoundingClientRect());
+    }
+
     addItem(
       {
         variantId: selectedVariant.id,
@@ -52,7 +59,6 @@ export default function ProductDetail({ product }) {
       qty
     );
     setQty(1);
-    openCart();
   }
 
   return (
