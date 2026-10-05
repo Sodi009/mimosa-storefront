@@ -407,7 +407,7 @@ button {
   align-items: center;
   justify-content: center;
   gap: 1px;
-  width: 68px;
+  width: 56px;
   padding: 4px 2px;
   border-radius: 14px;
   background: none;
@@ -593,6 +593,29 @@ button {
     grid-template-columns: repeat(2, 1fr);
     row-gap: 28px;
   }
+}
+
+.guide-faq {
+  display: flex;
+  flex-direction: column;
+  max-width: 60ch;
+  padding: 32px 0 64px;
+}
+
+.guide-faq-item {
+  padding: 18px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.guide-faq-item:first-child {
+  padding-top: 0;
+}
+
+.guide-faq-text {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--ink);
 }
 
 /* ---------- Section heading ---------- */

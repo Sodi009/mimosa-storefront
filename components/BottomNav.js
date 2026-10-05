@@ -12,6 +12,7 @@ export default function BottomNav() {
   const isHome = pathname === "/";
   const isShop = pathname.startsWith("/collections") || pathname.startsWith("/products");
   const isTrack = pathname.startsWith("/track");
+  const isGuide = pathname.startsWith("/guide");
 
   return (
     <nav className="bottom-nav" aria-label="Primary">
@@ -52,6 +53,15 @@ export default function BottomNav() {
           <circle cx="16.5" cy="18.5" r="1.5" />
         </svg>
         <span>Track</span>
+      </Link>
+
+      <Link href="/guide" className={`bottom-nav-item ${isGuide ? "active" : ""}`}>
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+          <circle cx="12" cy="12" r="9" />
+          <path d="M9.3 9.2a2.7 2.7 0 0 1 5.2.9c0 1.8-2.6 1.8-2.6 3.6" />
+          <path d="M12 17v.01" />
+        </svg>
+        <span>Guide</span>
       </Link>
     </nav>
   );
