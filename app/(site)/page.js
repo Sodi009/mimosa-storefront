@@ -174,7 +174,7 @@ export default async function HomePage() {
           <h1>Your BKK wardrobe awaits in Dubai.</h1>
           <p>
             Curated finds sourced and packed in Bangkok, delivered straight to your door
-            in Dubai. Add what you like to your bag, send your order on WhatsApp, and
+            in Dubai. Add what you like to your cart, send your order on WhatsApp, and
             we'll confirm stock before you pay.
           </p>
           <a href="/collections/all" className="btn-primary">
@@ -216,13 +216,13 @@ export default async function HomePage() {
       <section className="how-it-works">
         <div className="how-step">
           <span className="how-step-num">01</span>
-          <p className="how-step-title">Browse &amp; add to bag</p>
+          <p className="how-step-title">Browse &amp; add to cart</p>
           <p className="how-step-desc">Pick what you like from the collection below.</p>
         </div>
         <div className="how-step">
           <span className="how-step-num">02</span>
           <p className="how-step-title">Send on WhatsApp</p>
-          <p className="how-step-desc">Your bag becomes a message — just hit send.</p>
+          <p className="how-step-desc">Your cart becomes a message — just hit send.</p>
         </div>
         <div className="how-step">
           <span className="how-step-num">03</span>

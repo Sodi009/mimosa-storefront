@@ -66,7 +66,7 @@ export default function ProductDetail({ product }) {
         <h1>{product.title}</h1>
         {minimumQuantity > 1 && (
           <p className="pdp-min-qty">
-            Minimum order: {minimumQuantity} different sizes/styles — add each to your bag separately.
+            Minimum order: {minimumQuantity} different sizes/styles — add each to your cart separately.
           </p>
         )}
 
@@ -112,7 +112,7 @@ export default function ProductDetail({ product }) {
           onClick={handleAdd}
           disabled={!selectedVariant || !selectedVariant.availableForSale}
         >
-          {selectedVariant?.availableForSale ? "Add to bag" : "Sold out"}
+          {selectedVariant?.availableForSale ? "Add to cart" : "Sold out"}
         </button>
       </div>
     </>

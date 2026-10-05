@@ -52,7 +52,7 @@ export default function CheckoutPage() {
         <div className="section-head" style={{ paddingBottom: 8 }}>
           <h2>Checkout</h2>
         </div>
-        <p style={{ color: "var(--muted)" }}>Your bag is empty.</p>
+        <p style={{ color: "var(--muted)" }}>Your cart is empty.</p>
         <Link href="/collections/all" className="btn-primary" style={{ marginTop: 16 }}>
           Continue shopping
         </Link>
@@ -70,7 +70,7 @@ export default function CheckoutPage() {
     if (unmet.length > 0) {
       const first = unmet[0];
       setError(
-        `${first.productTitle} needs at least ${first.required} different sizes/styles in your bag — you have ${first.have}.`
+        `${first.productTitle} needs at least ${first.required} different sizes/styles in your cart — you have ${first.have}.`
       );
       return;
     }

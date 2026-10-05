@@ -36,12 +36,13 @@ export default function BottomNav() {
       <button type="button" className="bottom-nav-item bottom-nav-cart" onClick={openCart} aria-label="Open cart">
         <span className="bottom-nav-cart-icon-wrap">
           <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M6 8h12l-1 12H7L6 8z" />
-            <path d="M9 8V6a3 3 0 0 1 6 0v2" />
+            <circle cx="9" cy="20" r="1" />
+            <circle cx="18" cy="20" r="1" />
+            <path d="M2 3h2l2.4 12.2a2 2 0 0 0 2 1.6h8.2a2 2 0 0 0 2-1.6L21 7H6" />
           </svg>
           {count > 0 && <span className="bottom-nav-cart-badge">{count}</span>}
         </span>
-        <span>Bag</span>
+        <span>Cart</span>
       </button>
 
       <Link href="/track" className={`bottom-nav-item ${isTrack ? "active" : ""}`}>
