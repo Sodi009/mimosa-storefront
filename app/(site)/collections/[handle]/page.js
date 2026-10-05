@@ -1,11 +1,10 @@
-import { getProducts, getProductsByCategory, getInStockProducts, CATEGORIES } from "@/lib/products";
+import { getProducts, getProductsByCategory, CATEGORIES } from "@/lib/products";
 import ProductCard from "@/components/ProductCard";
 import CategoryFilterMenu from "@/components/CategoryFilterMenu";
 
 const FILTER_CATEGORIES = [
   { name: "All", handle: "all" },
   { name: "New In", handle: "new" },
-  { name: "Instock items", handle: "instock" },
   { name: "Bags", handle: "bags" },
   { name: "Tops", handle: "tops" },
   { name: "Dresses", handle: "dresses" },
@@ -34,9 +33,6 @@ export default async function CollectionPage({ params }) {
   } else if (handle === "new") {
     title = "New in";
     products = await getProducts({ first: 24 });
-  } else if (handle === "instock") {
-    title = "Instock items";
-    products = await getInStockProducts({ first: 48 });
   } else if (CATEGORIES.includes(handle)) {
     title = FILTER_CATEGORIES.find((cat) => cat.handle === handle)?.name
       || handle.charAt(0).toUpperCase() + handle.slice(1);
