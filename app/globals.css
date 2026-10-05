@@ -351,7 +351,12 @@ button {
     position: fixed;
     left: 50%;
     bottom: calc(4px + env(safe-area-inset-bottom));
-    transform: translateX(-50%);
+    /* translate3d instead of translateX forces this onto its own GPU
+       layer — plain translateX/position:fixed can flicker or vanish
+       mid-scroll on iOS Safari otherwise. */
+    transform: translate3d(-50%, 0, 0);
+    -webkit-backface-visibility: hidden;
+    will-change: transform;
     z-index: 45;
     justify-content: center;
     align-items: center;
