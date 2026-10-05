@@ -90,8 +90,8 @@ const CATEGORIES = [
     ),
   },
   {
-    name: "Sister Hood Bar",
-    handle: "sister-hood-bar",
+    name: "Sister Hood Bras",
+    handle: "sister-hood-bras",
     icon: (
       <path d="M12 2.5 14.2 8.8 21 9l-5.4 4.4L17.6 20 12 16.3 6.4 20l2-6.6L3 9l6.8-.2 2.2-6.3Z" />
     ),

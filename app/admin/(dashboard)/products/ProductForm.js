@@ -19,7 +19,7 @@ const CATEGORIES = [
   { value: "hair-tools", label: "Hair Tools" },
   { value: "foods", label: "Foods" },
   { value: "contact-lens-glasses", label: "Contact Lens and Glasses" },
-  { value: "sister-hood-bar", label: "Sister Hood Bar" },
+  { value: "sister-hood-bras", label: "Sister Hood Bras" },
   { value: "wallet", label: "Wallet" },
 ];
 
