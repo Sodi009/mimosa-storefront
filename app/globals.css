@@ -1390,58 +1390,6 @@ button {
   cursor: default;
 }
 
-.checkout-send-row {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.checkout-btn-secondary {
-  background: var(--glass-bg);
-  backdrop-filter: var(--glass-blur-sm);
-  -webkit-backdrop-filter: var(--glass-blur-sm);
-  border: 1px solid var(--ink);
-  color: var(--ink);
-}
-
-.messenger-confirm-overlay {
-  position: fixed;
-  inset: 0;
-  z-index: 80;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 24px;
-  background: rgba(27, 26, 23, 0.4);
-}
-
-.messenger-confirm-box {
-  width: min(360px, 100%);
-  padding: 24px;
-  border-radius: 16px;
-  /* Solid, not glass: this sits over whatever's behind it on the page. */
-  background: var(--bg);
-  border: 1px solid var(--line);
-  box-shadow: var(--glass-shadow-lg);
-  text-align: center;
-}
-
-.messenger-confirm-box p {
-  margin: 0 0 8px;
-  font-size: 15px;
-  color: var(--ink);
-}
-
-.messenger-confirm-hint {
-  font-size: 13px;
-  color: var(--muted);
-  margin-bottom: 18px !important;
-}
-
-.messenger-confirm-box .btn-primary {
-  width: 100%;
-}
-
 /* ---------- Footer ---------- */
 
 .site-footer {
@@ -1460,7 +1408,28 @@ button {
 
 /* ---------- Checkout ---------- */
 
+.checkout-topbar {
+  border-bottom: 1px solid var(--line);
+  padding: 16px 0;
+}
+
+.checkout-back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: none;
+  border: none;
+  color: var(--ink);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.checkout-back-btn:hover {
+  color: var(--brass);
+}
+
 .checkout-page {
+  padding-top: 32px;
   padding-bottom: 80px;
 }
 

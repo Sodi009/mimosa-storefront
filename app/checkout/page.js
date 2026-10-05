@@ -3,8 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useCart } from "@/lib/cart-context";
-import { getWhatsAppCheckoutUrl, buildOrderMessage } from "@/lib/whatsapp";
-import { getMessengerUrl } from "@/lib/messenger";
+import { getWhatsAppCheckoutUrl } from "@/lib/whatsapp";
 import { submitOrder } from "@/lib/orders";
 import { findUnmetMinimums } from "@/lib/product-rules";
 
@@ -45,10 +44,7 @@ export default function CheckoutPage() {
   const [apartment, setApartment] = useState("");
   const [landmark, setLandmark] = useState("");
   const [error, setError] = useState(null);
-  const [sendingVia, setSendingVia] = useState(null);
-  // Holds { url, win, copied } while waiting for the customer to confirm
-  // before we navigate to Messenger — see handleSend for why.
-  const [messengerConfirm, setMessengerConfirm] = useState(null);
+  const [submitting, setSubmitting] = useState(false);
 
   if (lines.length === 0) {
     return (
@@ -66,7 +62,8 @@ export default function CheckoutPage() {
 
   const unmetMinimums = findUnmetMinimums(lines);
 
-  async function handleSend(channel) {
+  async function handleSubmit(e) {
+    e.preventDefault();
     setError(null);
 
     const unmet = findUnmetMinimums(lines);
@@ -90,9 +87,9 @@ export default function CheckoutPage() {
     // Open the tab synchronously, right on the click, before any async work —
     // otherwise browsers (Safari especially) silently block window.open() once
     // it happens after an await, since it's no longer tied to the user gesture.
-    const targetWindow = window.open("", "_blank");
+    const whatsappWindow = window.open("", "_blank");
 
-    setSendingVia(channel);
+    setSubmitting(true);
 
     const fulfillment =
       type === "pickup"
@@ -143,52 +140,16 @@ export default function CheckoutPage() {
       phone: fulfillment.phone,
     }).catch((err) => console.error("Order save failed:", err));
 
-    if (channel === "whatsapp") {
-      const url = getWhatsAppCheckoutUrl(lines, fulfillment);
-      setSendingVia(null);
-      if (targetWindow) {
-        targetWindow.location.href = url;
-      } else {
-        // Popup was blocked even for the synchronous open — fall back to
-        // navigating the current tab so the order still reaches WhatsApp.
-        window.location.href = url;
-      }
-      return;
-    }
+    const url = getWhatsAppCheckoutUrl(lines, fulfillment);
+    setSubmitting(false);
 
-    // Messenger links can't prefill the chat text the way wa.me does, so the
-    // message is copied to the clipboard instead. A native window.alert()
-    // here used to tell the customer to paste it in, but blocking the page
-    // with alert() while an already-open tab is waiting to navigate is a
-    // known iOS Safari bug — it can leave that tab stuck on a black screen.
-    // A custom, non-blocking confirmation avoids that entirely, and the
-    // customer still can't miss it since Messenger only opens after they
-    // dismiss it themselves.
-    let copied = false;
-    try {
-      await navigator.clipboard.writeText(buildOrderMessage(lines, fulfillment));
-      copied = true;
-    } catch {
-      // Clipboard access can fail (e.g. permissions) — Messenger still opens either way.
-    }
-
-    setSendingVia(null);
-    setMessengerConfirm({ url: getMessengerUrl(), win: targetWindow, copied });
-  }
-
-  function confirmMessenger() {
-    const { url, win } = messengerConfirm;
-    setMessengerConfirm(null);
-    if (win) {
-      win.location.href = url;
+    if (whatsappWindow) {
+      whatsappWindow.location.href = url;
     } else {
+      // Popup was blocked even for the synchronous open — fall back to
+      // navigating the current tab so the order still reaches WhatsApp.
       window.location.href = url;
     }
-  }
-
-  function cancelMessenger() {
-    messengerConfirm?.win?.close();
-    setMessengerConfirm(null);
   }
 
   return (
@@ -197,17 +158,11 @@ export default function CheckoutPage() {
         <h2>Checkout</h2>
       </div>
       <p style={{ color: "var(--muted)", marginTop: 0, marginBottom: 28, maxWidth: "46ch" }}>
-        Choose pickup or delivery, then send your order on WhatsApp or Messenger — we'll
-        confirm availability before you pay.
+        Choose pickup or delivery, then send your order on WhatsApp — we'll confirm
+        availability before you pay.
       </p>
 
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          handleSend("whatsapp");
-        }}
-        className="checkout-form"
-      >
+      <form onSubmit={handleSubmit} className="checkout-form">
         <div className="option-group">
           <p className="option-label">Fulfillment</p>
           <div className="fulfillment-toggle">
@@ -346,7 +301,7 @@ export default function CheckoutPage() {
               </span>
             </div>
           ))}
-          <p className="checkout-price-note">Price to be confirmed with us</p>
+          <p className="checkout-price-note">Price to be confirmed on WhatsApp</p>
           {unmetMinimums.map((u) => (
             <p className="checkout-min-qty-notice" key={u.handle}>
               Pick {u.required - u.have} more different size/style of {u.productTitle} — it needs at
@@ -355,40 +310,10 @@ export default function CheckoutPage() {
           ))}
         </div>
 
-        <div className="checkout-send-row">
-          <button type="submit" className="checkout-btn" disabled={Boolean(sendingVia)} style={{ marginTop: 8 }}>
-            {sendingVia === "whatsapp" ? "Sending…" : "Send order on WhatsApp"}
-          </button>
-          <button
-            type="button"
-            className="checkout-btn checkout-btn-secondary"
-            disabled={Boolean(sendingVia)}
-            onClick={() => handleSend("messenger")}
-          >
-            {sendingVia === "messenger" ? "Sending…" : "Send order on Messenger"}
-          </button>
-        </div>
+        <button type="submit" className="checkout-btn" disabled={submitting} style={{ marginTop: 8 }}>
+          {submitting ? "Sending…" : "Send order on WhatsApp"}
+        </button>
       </form>
-
-      {messengerConfirm && (
-        <div className="messenger-confirm-overlay" onClick={cancelMessenger}>
-          <div className="messenger-confirm-box" onClick={(e) => e.stopPropagation()}>
-            <p>
-              {messengerConfirm.copied
-                ? "Your order details have been copied."
-                : "Couldn't copy your order automatically — just tell us what you'd like to order."}
-            </p>
-            {messengerConfirm.copied && (
-              <p className="messenger-confirm-hint">
-                In the Messenger chat, tap the message box, Paste, then hit Send.
-              </p>
-            )}
-            <button type="button" className="btn-primary" onClick={confirmMessenger}>
-              Continue to Messenger
-            </button>
-          </div>
-        </div>
-      )}
     </main>
   );
 }
