@@ -1,6 +1,7 @@
 import { getProducts, getProductsByCategory, getInStockProducts, CATEGORIES } from "@/lib/products";
 import ProductCard from "@/components/ProductCard";
 import CategoryFilterMenu from "@/components/CategoryFilterMenu";
+import SortFilterMenu from "@/components/SortFilterMenu";
 
 const FILTER_CATEGORIES = [
   { name: "All", handle: "all" },
@@ -69,38 +70,14 @@ export default async function CollectionPage({ params, searchParams }) {
     );
   }
 
-  function filterUrl({ sort: sortOverride, instock: instockOverride } = {}) {
-    const nextSort = sortOverride !== undefined ? sortOverride : sort;
-    const nextInstock = instockOverride !== undefined ? instockOverride : instockOnly;
-    const qs = new URLSearchParams();
-    if (nextSort !== "newest") qs.set("sort", nextSort);
-    if (nextInstock) qs.set("instock", "1");
-    const query = qs.toString();
-    return query ? `/collections/${handle}?${query}` : `/collections/${handle}`;
-  }
-
   return (
     <main className="wrap">
       <div className="section-head">
         <h2>{title}</h2>
       </div>
-      <CategoryFilterMenu categories={FILTER_CATEGORIES} current={handle} />
-      <div className="category-filter" style={{ paddingBottom: 24 }}>
-        {SORT_OPTIONS.map((opt) => (
-          <a
-            key={opt.value}
-            href={filterUrl({ sort: opt.value })}
-            className={`category-filter-pill ${sort === opt.value ? "selected" : ""}`}
-          >
-            {opt.label}
-          </a>
-        ))}
-        <a
-          href={filterUrl({ instock: !instockOnly })}
-          className={`category-filter-pill ${instockOnly ? "selected" : ""}`}
-        >
-          In stock only
-        </a>
+      <div className="filter-menu-row">
+        <CategoryFilterMenu categories={FILTER_CATEGORIES} current={handle} />
+        <SortFilterMenu handle={handle} sortOptions={SORT_OPTIONS} sort={sort} instock={instockOnly} />
       </div>
       <div className="product-grid">
         {products.map((product) => (
