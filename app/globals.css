@@ -826,6 +826,7 @@ button {
    wrapping grid turned into a very long vertical scroll on mobile. */
 .testimonial-grid {
   display: flex;
+  align-items: flex-start;
   gap: 16px;
   overflow-x: auto;
   padding-bottom: 64px;
