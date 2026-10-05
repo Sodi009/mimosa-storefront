@@ -1,13 +1,44 @@
 "use client";
 
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useCart } from "@/lib/cart-context";
+
+// Hides the pill while the page scrolls down (more room to browse), and
+// brings it back the moment the page scrolls up — the way most native
+// app tab bars behave. Always visible near the very top so it doesn't
+// vanish the instant someone starts reading.
+function useHideOnScrollDown() {
+  const [hidden, setHidden] = useState(false);
+  const lastY = useRef(0);
+
+  useEffect(() => {
+    lastY.current = window.scrollY;
+    function onScroll() {
+      const y = window.scrollY;
+      const diff = y - lastY.current;
+      if (y < 40) {
+        setHidden(false);
+      } else if (diff > 4) {
+        setHidden(true);
+      } else if (diff < -4) {
+        setHidden(false);
+      }
+      lastY.current = y;
+    }
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  return hidden;
+}
 
 export default function BottomNav() {
   const pathname = usePathname();
   const { totalQuantity, openCart } = useCart();
   const count = totalQuantity || 0;
+  const hidden = useHideOnScrollDown();
 
   const isHome = pathname === "/";
   const isShop = pathname.startsWith("/collections") || pathname.startsWith("/products");
@@ -15,7 +46,7 @@ export default function BottomNav() {
   const isGuide = pathname.startsWith("/guide");
 
   return (
-    <nav className="bottom-nav" aria-label="Primary">
+    <nav className={`bottom-nav ${hidden ? "bottom-nav-hidden" : ""}`} aria-label="Primary">
       <Link href="/" className={`bottom-nav-item ${isHome ? "active" : ""}`}>
         <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
           <path d="M4 11.5 12 4l8 7.5" />

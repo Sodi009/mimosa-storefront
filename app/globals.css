@@ -30,6 +30,7 @@
 
 html {
   scroll-behavior: smooth;
+  height: 100%;
 }
 
 body {
@@ -39,7 +40,15 @@ body {
   font-family: var(--font-body);
   font-size: 16px;
   line-height: 1.55;
+  /* iOS Safari's address/toolbar bar auto-hides on scroll-down and
+     reappears on scroll-up, resizing the visual viewport as it animates.
+     A plain 100vh doesn't track that, so a bottom-anchored fixed element
+     can get clipped by the toolbar mid-animation. -webkit-fill-available
+     (Safari) and 100dvh (the modern, spec equivalent) both track the
+     real visible viewport instead of the larger static one. */
   min-height: 100vh;
+  min-height: -webkit-fill-available;
+  min-height: 100dvh;
   display: flex;
   flex-direction: column;
 }
@@ -398,6 +407,13 @@ button {
     border-radius: 999px;
     padding: 5px;
     box-shadow: 0 10px 30px rgba(28, 26, 23, 0.28);
+    transition: transform 0.25s ease, opacity 0.25s ease;
+  }
+
+  .bottom-nav-hidden {
+    transform: translateY(140%);
+    opacity: 0;
+    pointer-events: none;
   }
 }
 
