@@ -980,7 +980,7 @@ button {
   display: grid;
   grid-template-columns: 1.1fr 0.9fr;
   gap: 56px;
-  padding: 48px 0 80px;
+  padding: 48px 0 24px;
 }
 
 @media (max-width: 860px) {
