@@ -304,8 +304,12 @@ button {
     font-size: 15px;
   }
 
+  /* The bottom tab bar covers Home/Shop/Track on mobile now, so the
+     hamburger menu is redundant — and its dropdown used to render under
+     the bottom nav's stacking context, letting the bar bleed through on
+     top of it. Simplest fix is to drop the hamburger here entirely. */
   .menu-toggle {
-    display: flex;
+    display: none;
   }
 }
 
