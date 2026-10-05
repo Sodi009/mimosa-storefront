@@ -3,6 +3,10 @@
 import { useState } from "react";
 import ReviewForm from "./ReviewForm";
 
+// Keeps the homepage from turning into a very long scroll of reviews —
+// the rest are still visible via the Facebook link above the list.
+const MAX_VISIBLE = 6;
+
 export default function TestimonialsSection({ initialReviews }) {
   const [reviews, setReviews] = useState(initialReviews);
 
@@ -25,7 +29,7 @@ export default function TestimonialsSection({ initialReviews }) {
         </a>
       </div>
       <div className="testimonial-grid">
-        {reviews.map((t, i) => {
+        {reviews.slice(0, MAX_VISIBLE).map((t, i) => {
           const stars = t.rating || 5;
           return (
             <div className="testimonial-card" key={`${t.name}-${i}`}>
