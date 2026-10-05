@@ -18,7 +18,7 @@ const FILTER_CATEGORIES = [
   { name: "Hair Tools", handle: "hair-tools" },
   { name: "Foods", handle: "foods" },
   { name: "Contact Lens and Glasses", handle: "contact-lens-glasses" },
-  { name: "Sister Hood Bras", handle: "sister-hood-bras" },
+  { name: "Sisterhood", handle: "sisterhood" },
   { name: "Wallet", handle: "wallet" },
 ];
 
