@@ -199,21 +199,22 @@ export default async function HomePage() {
       <div className="section-head">
         <h2>Shop by category</h2>
       </div>
-      <div className="category-grid">
+      <div className="category-rail">
         {CATEGORIES.map((cat) => (
-          <a key={cat.handle} href={`/collections/${cat.handle}`} className="category-card">
-            <svg
-              className="category-icon"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              {cat.icon}
-            </svg>
-            <span className="category-name">{cat.name}</span>
+          <a key={cat.handle} href={`/collections/${cat.handle}`} className="category-rail-item">
+            <span className="category-rail-icon">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                {cat.icon}
+              </svg>
+            </span>
+            <span className="category-rail-name">{cat.name}</span>
           </a>
         ))}
       </div>
