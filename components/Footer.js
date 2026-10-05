@@ -1,7 +1,6 @@
 export default function Footer() {
   return (
     <footer className="site-footer wrap">
-      <span>© {new Date().getFullYear()} Mimosa BKK</span>
       <div className="footer-social-group">
         <a
           href="https://www.facebook.com/people/Mimosa-BKK-Collection/61571651470942/"
@@ -26,6 +25,7 @@ export default function Footer() {
           </svg>
         </a>
       </div>
+      <span>© {new Date().getFullYear()} Mimosa BKK</span>
     </footer>
   );
 }
