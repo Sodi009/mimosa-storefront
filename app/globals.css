@@ -988,17 +988,32 @@ button {
 }
 
 .pdp-gallery-main {
+  position: relative;
   aspect-ratio: 4 / 5;
   background: var(--line);
   overflow: hidden;
   border-radius: 18px;
   margin-bottom: 10px;
+  touch-action: pan-y;
 }
 
 .pdp-gallery-main img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+}
+
+.pdp-gallery-counter {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  background: rgba(28, 26, 23, 0.6);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 3px 9px;
+  border-radius: 999px;
+  letter-spacing: 0.02em;
 }
 
 .pdp-thumbs {
@@ -1017,6 +1032,14 @@ button {
 .pdp-thumbs::-webkit-scrollbar-thumb {
   background: var(--line);
   border-radius: 999px;
+}
+
+@media (max-width: 600px) {
+  /* The counter badge + swipe on the main image replace the thumb strip
+     on small screens, closer to Shein's mobile gallery. */
+  .pdp-thumbs {
+    display: none;
+  }
 }
 
 .pdp-thumb {
@@ -1048,16 +1071,21 @@ button {
   border-radius: 8px;
 }
 
-.pdp-info h1 {
-  font-family: var(--font-display);
-  font-size: 30px;
-  margin: 0 0 10px;
+/* Price leads visually, title follows smaller underneath — Shein-style
+   hierarchy where the number is the first thing a shopper reads. */
+.pdp-price {
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--ink);
+  margin: 0 0 6px;
 }
 
-.pdp-price {
-  font-size: 18px;
+.pdp-info h1 {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 19px;
   color: var(--muted);
-  margin-bottom: 24px;
+  margin: 0 0 20px;
 }
 
 .pdp-description {
@@ -1081,14 +1109,16 @@ button {
 
 .option-label {
   font-size: 12px;
+  font-weight: 600;
   letter-spacing: 0.04em;
+  text-transform: uppercase;
   color: var(--muted);
   margin-bottom: 8px;
 }
 
 .option-values {
   display: flex;
-  gap: 8px;
+  gap: 6px;
   flex-wrap: wrap;
 }
 
@@ -1097,7 +1127,8 @@ button {
   background: var(--glass-bg);
   backdrop-filter: var(--glass-blur-sm);
   -webkit-backdrop-filter: var(--glass-blur-sm);
-  padding: 9px 19px;
+  min-width: 44px;
+  padding: 8px 16px;
   font-size: 13px;
   font-weight: 500;
   color: var(--ink);

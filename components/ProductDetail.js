@@ -60,10 +60,10 @@ export default function ProductDetail({ product }) {
       <ProductGallery images={images} title={product.title} variantImageUrl={selectedVariant?.image?.url} />
 
       <div className="pdp-info">
-        <h1>{product.title}</h1>
         <p className="pdp-price">
           {formatApproxPriceRange(product.priceFrom, product.priceTo)}
         </p>
+        <h1>{product.title}</h1>
         {minimumQuantity > 1 && (
           <p className="pdp-min-qty">
             Minimum order: {minimumQuantity} different sizes/styles — add each to your bag separately.
