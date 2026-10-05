@@ -12,28 +12,74 @@ export default function GuidePage() {
         A quick guide to browsing, ordering, and tracking on Mimosa BKK Collection.
       </p>
 
-      <section className="how-it-works">
-        <div className="how-step">
-          <span className="how-step-num">01</span>
-          <p className="how-step-title">Browse &amp; add to cart</p>
-          <p className="how-step-desc">Pick what you like, choose a size/style, and add it to your cart.</p>
+      <div className="guide-steps">
+        <div className="guide-step-item">
+          <span className="guide-step-num">1</span>
+          <div>
+            <p className="option-label" style={{ marginBottom: 6 }}>Browse &amp; pick your size/style</p>
+            <p className="guide-faq-text">
+              Open any product to see its photos, description, and the sizes/styles currently in
+              stock. Tap one to select it, then set how many you want with the quantity stepper.
+            </p>
+          </div>
         </div>
-        <div className="how-step">
-          <span className="how-step-num">02</span>
-          <p className="how-step-title">Send on WhatsApp</p>
-          <p className="how-step-desc">Checkout turns your cart into a message — just hit send.</p>
+
+        <div className="guide-step-item">
+          <span className="guide-step-num">2</span>
+          <div>
+            <p className="option-label" style={{ marginBottom: 6 }}>Add it to your cart</p>
+            <p className="guide-faq-text">
+              Tap "Add to cart" — you'll see it fly into the cart icon. Add more items the same
+              way; a few products need more than one different size/style before checkout, and
+              that's called out right on the product page when it applies.
+            </p>
+          </div>
         </div>
-        <div className="how-step">
-          <span className="how-step-num">03</span>
-          <p className="how-step-title">Confirm &amp; pay</p>
-          <p className="how-step-desc">We confirm stock and the exact price, then arrange payment.</p>
+
+        <div className="guide-step-item">
+          <span className="guide-step-num">3</span>
+          <div>
+            <p className="option-label" style={{ marginBottom: 6 }}>Fill in checkout details</p>
+            <p className="guide-faq-text">
+              From the cart, go to checkout and choose delivery or pickup, cash on delivery or
+              bank transfer, and your name and contact details.
+            </p>
+          </div>
         </div>
-        <div className="how-step">
-          <span className="how-step-num">04</span>
-          <p className="how-step-title">Delivered in Dubai</p>
-          <p className="how-step-desc">Track your order anytime on the Track page.</p>
+
+        <div className="guide-step-item">
+          <span className="guide-step-num">4</span>
+          <div>
+            <p className="option-label" style={{ marginBottom: 6 }}>Send your order on WhatsApp</p>
+            <p className="guide-faq-text">
+              Checkout turns everything into a message and opens WhatsApp with it ready to go —
+              you just hit send from there.
+            </p>
+          </div>
         </div>
-      </section>
+
+        <div className="guide-step-item">
+          <span className="guide-step-num">5</span>
+          <div>
+            <p className="option-label" style={{ marginBottom: 6 }}>We confirm stock &amp; price</p>
+            <p className="guide-faq-text">
+              We reply on WhatsApp to confirm availability and the final price for your order
+              before anything is paid.
+            </p>
+          </div>
+        </div>
+
+        <div className="guide-step-item">
+          <span className="guide-step-num">6</span>
+          <div>
+            <p className="option-label" style={{ marginBottom: 6 }}>Pay &amp; receive your order</p>
+            <p className="guide-faq-text">
+              Pay the way you chose at checkout, then sit back — we'll get it to you by delivery
+              in Dubai or ready for pickup.
+            </p>
+          </div>
+        </div>
+      </div>
 
       <div className="guide-faq">
         <div className="guide-faq-item">

@@ -595,6 +595,38 @@ button {
   }
 }
 
+.guide-steps {
+  display: flex;
+  flex-direction: column;
+  max-width: 60ch;
+  padding: 24px 0 8px;
+}
+
+.guide-step-item {
+  display: flex;
+  gap: 16px;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.guide-step-item:first-child {
+  padding-top: 0;
+}
+
+.guide-step-num {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--brass);
+  color: var(--bg);
+  font-family: var(--font-display);
+  font-size: 13px;
+}
+
 .guide-faq {
   display: flex;
   flex-direction: column;
