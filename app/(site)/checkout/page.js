@@ -148,12 +148,20 @@ export default function CheckoutPage() {
     } else {
       // Messenger links can't prefill the message the way wa.me does, so
       // copy it to the clipboard instead and let the customer paste it in.
+      // A blocking alert here (before the tab switch) is the only reliable
+      // way to make sure they actually see that instruction — the on-page
+      // note gets missed since attention jumps straight to the new tab.
       url = getMessengerUrl();
       try {
         await navigator.clipboard.writeText(buildOrderMessage(lines, fulfillment));
         setCopiedNotice(true);
+        window.alert(
+          "Your order details have been copied.\n\nIn the Messenger chat that opens next, tap the message box and Paste, then hit Send."
+        );
       } catch {
-        // Clipboard access can fail (e.g. permissions) — Messenger still opens either way.
+        window.alert(
+          "Couldn't copy your order automatically. In the Messenger chat that opens next, just tell us what you'd like to order."
+        );
       }
     }
 
