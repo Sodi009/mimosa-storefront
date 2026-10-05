@@ -1385,6 +1385,32 @@ button {
   opacity: 0.85;
 }
 
+.checkout-btn:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.checkout-send-row {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.checkout-btn-secondary {
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur-sm);
+  -webkit-backdrop-filter: var(--glass-blur-sm);
+  border: 1px solid var(--ink);
+  color: var(--ink);
+}
+
+.checkout-copied-note {
+  color: var(--sage);
+  font-size: 13px;
+  font-weight: 600;
+  margin: 0 0 8px;
+}
+
 /* ---------- Footer ---------- */
 
 .site-footer {

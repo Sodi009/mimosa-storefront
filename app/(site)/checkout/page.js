@@ -3,7 +3,8 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useCart } from "@/lib/cart-context";
-import { getWhatsAppCheckoutUrl } from "@/lib/whatsapp";
+import { getWhatsAppCheckoutUrl, buildOrderMessage } from "@/lib/whatsapp";
+import { getMessengerUrl } from "@/lib/messenger";
 import { submitOrder } from "@/lib/orders";
 import { findUnmetMinimums } from "@/lib/product-rules";
 
@@ -44,7 +45,8 @@ export default function CheckoutPage() {
   const [apartment, setApartment] = useState("");
   const [landmark, setLandmark] = useState("");
   const [error, setError] = useState(null);
-  const [submitting, setSubmitting] = useState(false);
+  const [sendingVia, setSendingVia] = useState(null);
+  const [copiedNotice, setCopiedNotice] = useState(false);
 
   if (lines.length === 0) {
     return (
@@ -62,9 +64,9 @@ export default function CheckoutPage() {
 
   const unmetMinimums = findUnmetMinimums(lines);
 
-  async function handleSubmit(e) {
-    e.preventDefault();
+  async function handleSend(channel) {
     setError(null);
+    setCopiedNotice(false);
 
     const unmet = findUnmetMinimums(lines);
     if (unmet.length > 0) {
@@ -87,9 +89,9 @@ export default function CheckoutPage() {
     // Open the tab synchronously, right on the click, before any async work —
     // otherwise browsers (Safari especially) silently block window.open() once
     // it happens after an await, since it's no longer tied to the user gesture.
-    const whatsappWindow = window.open("", "_blank");
+    const targetWindow = window.open("", "_blank");
 
-    setSubmitting(true);
+    setSendingVia(channel);
 
     const fulfillment =
       type === "pickup"
@@ -140,14 +142,28 @@ export default function CheckoutPage() {
       phone: fulfillment.phone,
     }).catch((err) => console.error("Order save failed:", err));
 
-    const url = getWhatsAppCheckoutUrl(lines, fulfillment);
-    setSubmitting(false);
+    let url;
+    if (channel === "whatsapp") {
+      url = getWhatsAppCheckoutUrl(lines, fulfillment);
+    } else {
+      // Messenger links can't prefill the message the way wa.me does, so
+      // copy it to the clipboard instead and let the customer paste it in.
+      url = getMessengerUrl();
+      try {
+        await navigator.clipboard.writeText(buildOrderMessage(lines, fulfillment));
+        setCopiedNotice(true);
+      } catch {
+        // Clipboard access can fail (e.g. permissions) — Messenger still opens either way.
+      }
+    }
 
-    if (whatsappWindow) {
-      whatsappWindow.location.href = url;
+    setSendingVia(null);
+
+    if (targetWindow) {
+      targetWindow.location.href = url;
     } else {
       // Popup was blocked even for the synchronous open — fall back to
-      // navigating the current tab so the order still reaches WhatsApp.
+      // navigating the current tab so the order still reaches the channel.
       window.location.href = url;
     }
   }
@@ -158,12 +174,12 @@ export default function CheckoutPage() {
         <h2>Checkout</h2>
       </div>
       <p style={{ color: "var(--muted)", marginTop: 0, marginBottom: 28, maxWidth: "46ch" }}>
-        Choose pickup or delivery, then send your order on WhatsApp — we'll confirm
-        availability before you pay.
+        Choose pickup or delivery, then send your order on WhatsApp or Messenger — we'll
+        confirm availability before you pay.
       </p>
 
       <div className="checkout-layout">
-        <form onSubmit={handleSubmit} className="checkout-form">
+        <form onSubmit={(e) => { e.preventDefault(); handleSend("whatsapp"); }} className="checkout-form">
           <div className="option-group">
             <p className="option-label">Fulfillment</p>
             <div className="fulfillment-toggle">
@@ -291,10 +307,25 @@ export default function CheckoutPage() {
           )}
 
           {error && <p className="track-error">{error}</p>}
+          {copiedNotice && (
+            <p className="checkout-copied-note">
+              Order copied — paste it into the Messenger chat that just opened.
+            </p>
+          )}
 
-          <button type="submit" className="checkout-btn" disabled={submitting} style={{ marginTop: 8 }}>
-            {submitting ? "Sending…" : "Send order on WhatsApp"}
-          </button>
+          <div className="checkout-send-row">
+            <button type="submit" className="checkout-btn" disabled={Boolean(sendingVia)} style={{ marginTop: 8 }}>
+              {sendingVia === "whatsapp" ? "Sending…" : "Send order on WhatsApp"}
+            </button>
+            <button
+              type="button"
+              className="checkout-btn checkout-btn-secondary"
+              disabled={Boolean(sendingVia)}
+              onClick={() => handleSend("messenger")}
+            >
+              {sendingVia === "messenger" ? "Sending…" : "Send order on Messenger"}
+            </button>
+          </div>
         </form>
 
         <div className="checkout-summary">
