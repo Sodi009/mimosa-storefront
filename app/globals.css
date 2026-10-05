@@ -506,66 +506,6 @@ button {
   }
 }
 
-/* ---------- Category rail ---------- */
-
-/* A single horizontally-scrolling row of circular icons, Shein-style,
-   instead of a 4-column card grid — with 14 categories that grid ran to
-   4 rows and pushed everything else far down the homepage. */
-.category-rail {
-  display: flex;
-  gap: 18px;
-  overflow-x: auto;
-  padding-bottom: 40px;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: none;
-}
-
-.category-rail::-webkit-scrollbar {
-  display: none;
-}
-
-.category-rail-item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
-  flex-shrink: 0;
-  width: 76px;
-  text-align: center;
-}
-
-.category-rail-icon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
-  border: 1px solid var(--glass-border);
-  background: var(--glass-bg);
-  backdrop-filter: var(--glass-blur-sm);
-  -webkit-backdrop-filter: var(--glass-blur-sm);
-  box-shadow: var(--glass-highlight);
-  color: var(--brass);
-  transition: border-color 0.2s ease, transform 0.2s ease;
-}
-
-.category-rail-icon svg {
-  width: 26px;
-  height: 26px;
-}
-
-.category-rail-item:hover .category-rail-icon {
-  border-color: var(--brass);
-  transform: translateY(-2px);
-}
-
-.category-rail-name {
-  font-size: 12px;
-  font-weight: 600;
-  line-height: 1.3;
-}
-
 /* ---------- How it works ---------- */
 
 .how-it-works {
