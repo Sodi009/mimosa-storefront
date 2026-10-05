@@ -889,6 +889,11 @@ button {
   border-radius: 10px;
 }
 
+.review-write-btn {
+  display: block;
+  margin: 0 auto 24px;
+}
+
 .review-form {
   display: flex;
   flex-direction: column;

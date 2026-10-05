@@ -6,6 +6,7 @@ import { supabasePublic } from "@/lib/supabase-public";
 import { compressImage } from "@/lib/compress-image";
 
 export default function ReviewForm({ productId, onSubmitted }) {
+  const [open, setOpen] = useState(false);
   const [name, setName] = useState("");
   const [rating, setRating] = useState(0);
   const [hoverRating, setHoverRating] = useState(0);
@@ -76,6 +77,14 @@ export default function ReviewForm({ productId, onSubmitted }) {
           Write another
         </button>
       </div>
+    );
+  }
+
+  if (!open) {
+    return (
+      <button type="button" className="btn-secondary review-write-btn" onClick={() => setOpen(true)}>
+        Write a review
+      </button>
     );
   }
 
