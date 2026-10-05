@@ -168,6 +168,22 @@ button {
   gap: 10px;
 }
 
+.header-social-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-right: 6px;
+}
+
+.header-social {
+  display: flex;
+  color: var(--muted);
+}
+
+.header-social:hover {
+  color: var(--brass);
+}
+
 .cart-toggle-wrap {
   position: relative;
 }
@@ -1331,10 +1347,7 @@ button {
   padding: 40px 0;
   color: var(--muted);
   font-size: 13px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 16px;
+  text-align: center;
 }
 
 @media (max-width: 600px) {
@@ -1342,31 +1355,6 @@ button {
     padding: 20px 0;
     font-size: 12px;
   }
-
-  .footer-social-group {
-    gap: 12px;
-  }
-
-  .footer-social svg {
-    width: 20px;
-    height: 20px;
-  }
-}
-
-.footer-social-group {
-  align-self: flex-start;
-  display: flex;
-  align-items: center;
-  gap: 16px;
-}
-
-.footer-social {
-  display: flex;
-  color: var(--muted);
-}
-
-.footer-social:hover {
-  color: var(--brass);
 }
 
 /* ---------- Checkout ---------- */
