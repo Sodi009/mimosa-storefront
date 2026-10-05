@@ -46,7 +46,9 @@ export default function CheckoutPage() {
   const [landmark, setLandmark] = useState("");
   const [error, setError] = useState(null);
   const [sendingVia, setSendingVia] = useState(null);
-  const [copiedNotice, setCopiedNotice] = useState(false);
+  // Holds { url, win, copied } while waiting for the customer to confirm
+  // before we navigate to Messenger — see handleSend for why.
+  const [messengerConfirm, setMessengerConfirm] = useState(null);
 
   if (lines.length === 0) {
     return (
@@ -66,7 +68,6 @@ export default function CheckoutPage() {
 
   async function handleSend(channel) {
     setError(null);
-    setCopiedNotice(false);
 
     const unmet = findUnmetMinimums(lines);
     if (unmet.length > 0) {
@@ -142,38 +143,52 @@ export default function CheckoutPage() {
       phone: fulfillment.phone,
     }).catch((err) => console.error("Order save failed:", err));
 
-    let url;
     if (channel === "whatsapp") {
-      url = getWhatsAppCheckoutUrl(lines, fulfillment);
-    } else {
-      // Messenger links can't prefill the message the way wa.me does, so
-      // copy it to the clipboard instead and let the customer paste it in.
-      // A blocking alert here (before the tab switch) is the only reliable
-      // way to make sure they actually see that instruction — the on-page
-      // note gets missed since attention jumps straight to the new tab.
-      url = getMessengerUrl();
-      try {
-        await navigator.clipboard.writeText(buildOrderMessage(lines, fulfillment));
-        setCopiedNotice(true);
-        window.alert(
-          "Your order details have been copied.\n\nIn the Messenger chat that opens next, tap the message box and Paste, then hit Send."
-        );
-      } catch {
-        window.alert(
-          "Couldn't copy your order automatically. In the Messenger chat that opens next, just tell us what you'd like to order."
-        );
+      const url = getWhatsAppCheckoutUrl(lines, fulfillment);
+      setSendingVia(null);
+      if (targetWindow) {
+        targetWindow.location.href = url;
+      } else {
+        // Popup was blocked even for the synchronous open — fall back to
+        // navigating the current tab so the order still reaches WhatsApp.
+        window.location.href = url;
       }
+      return;
+    }
+
+    // Messenger links can't prefill the chat text the way wa.me does, so the
+    // message is copied to the clipboard instead. A native window.alert()
+    // here used to tell the customer to paste it in, but blocking the page
+    // with alert() while an already-open tab is waiting to navigate is a
+    // known iOS Safari bug — it can leave that tab stuck on a black screen.
+    // A custom, non-blocking confirmation avoids that entirely, and the
+    // customer still can't miss it since Messenger only opens after they
+    // dismiss it themselves.
+    let copied = false;
+    try {
+      await navigator.clipboard.writeText(buildOrderMessage(lines, fulfillment));
+      copied = true;
+    } catch {
+      // Clipboard access can fail (e.g. permissions) — Messenger still opens either way.
     }
 
     setSendingVia(null);
+    setMessengerConfirm({ url: getMessengerUrl(), win: targetWindow, copied });
+  }
 
-    if (targetWindow) {
-      targetWindow.location.href = url;
+  function confirmMessenger() {
+    const { url, win } = messengerConfirm;
+    setMessengerConfirm(null);
+    if (win) {
+      win.location.href = url;
     } else {
-      // Popup was blocked even for the synchronous open — fall back to
-      // navigating the current tab so the order still reaches the channel.
       window.location.href = url;
     }
+  }
+
+  function cancelMessenger() {
+    messengerConfirm?.win?.close();
+    setMessengerConfirm(null);
   }
 
   return (
@@ -186,155 +201,136 @@ export default function CheckoutPage() {
         confirm availability before you pay.
       </p>
 
-      <div className="checkout-layout">
-        <form onSubmit={(e) => { e.preventDefault(); handleSend("whatsapp"); }} className="checkout-form">
-          <div className="option-group">
-            <p className="option-label">Fulfillment</p>
-            <div className="fulfillment-toggle">
-              <button
-                type="button"
-                className={`fulfillment-option ${type === "delivery" ? "selected" : ""}`}
-                onClick={() => setType("delivery")}
-              >
-                Delivery
-              </button>
-              <button
-                type="button"
-                className={`fulfillment-option ${type === "pickup" ? "selected" : ""}`}
-                onClick={() => setType("pickup")}
-              >
-                Pickup
-              </button>
-            </div>
-          </div>
-
-          <div className="option-group">
-            <p className="option-label">Payment</p>
-            <div className="fulfillment-toggle">
-              <button
-                type="button"
-                className={`fulfillment-option ${payment === "cod" ? "selected" : ""}`}
-                onClick={() => setPayment("cod")}
-              >
-                Cash on delivery
-              </button>
-              <button
-                type="button"
-                className={`fulfillment-option ${payment === "bank" ? "selected" : ""}`}
-                onClick={() => setPayment("bank")}
-              >
-                Bank transfer
-              </button>
-            </div>
-          </div>
-
-          <label className="checkout-field">
-            <span className="option-label">Full name</span>
-            <input
-              type="text"
-              className="track-input"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              placeholder="Your name"
-            />
-          </label>
-
-          <label className="checkout-field">
-            <span className="option-label">Phone number</span>
-            <input
-              type="tel"
-              className="track-input"
-              value={phone}
-              onChange={(e) => setPhone(e.target.value)}
-              placeholder="e.g. 971 50 123 4567"
-            />
-          </label>
-
-          {type === "delivery" && (
-            <>
-              <label className="checkout-field">
-                <span className="option-label">Area in Dubai</span>
-                <select
-                  className="track-input"
-                  value={area}
-                  onChange={(e) => setArea(e.target.value)}
-                >
-                  <option value="">Select an area</option>
-                  {DUBAI_AREAS.map((a) => (
-                    <option key={a} value={a}>
-                      {a}
-                    </option>
-                  ))}
-                </select>
-              </label>
-
-              <label className="checkout-field">
-                <span className="option-label">Building / villa name &amp; no.</span>
-                <input
-                  type="text"
-                  className="track-input"
-                  value={building}
-                  onChange={(e) => setBuilding(e.target.value)}
-                  placeholder="e.g. Marina Heights Tower, Villa 12"
-                />
-              </label>
-
-              <label className="checkout-field">
-                <span className="option-label">Street</span>
-                <input
-                  type="text"
-                  className="track-input"
-                  value={street}
-                  onChange={(e) => setStreet(e.target.value)}
-                  placeholder="Street / zone"
-                />
-              </label>
-
-              <label className="checkout-field">
-                <span className="option-label">Apartment / floor / unit (optional)</span>
-                <input
-                  type="text"
-                  className="track-input"
-                  value={apartment}
-                  onChange={(e) => setApartment(e.target.value)}
-                  placeholder="e.g. Apt 1204, 12th floor"
-                />
-              </label>
-
-              <label className="checkout-field">
-                <span className="option-label">Nearest landmark (optional)</span>
-                <input
-                  type="text"
-                  className="track-input"
-                  value={landmark}
-                  onChange={(e) => setLandmark(e.target.value)}
-                  placeholder="e.g. Near Marina Mall"
-                />
-              </label>
-            </>
-          )}
-
-          {error && <p className="track-error">{error}</p>}
-          {copiedNotice && (
-            <p className="checkout-copied-note">
-              Order copied — paste it into the Messenger chat that just opened.
-            </p>
-          )}
-
-          <div className="checkout-send-row">
-            <button type="submit" className="checkout-btn" disabled={Boolean(sendingVia)} style={{ marginTop: 8 }}>
-              {sendingVia === "whatsapp" ? "Sending…" : "Send order on WhatsApp"}
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          handleSend("whatsapp");
+        }}
+        className="checkout-form"
+      >
+        <div className="option-group">
+          <p className="option-label">Fulfillment</p>
+          <div className="fulfillment-toggle">
+            <button
+              type="button"
+              className={`fulfillment-option ${type === "delivery" ? "selected" : ""}`}
+              onClick={() => setType("delivery")}
+            >
+              Delivery
             </button>
             <button
               type="button"
-              className="checkout-btn checkout-btn-secondary"
-              disabled={Boolean(sendingVia)}
-              onClick={() => handleSend("messenger")}
+              className={`fulfillment-option ${type === "pickup" ? "selected" : ""}`}
+              onClick={() => setType("pickup")}
             >
-              {sendingVia === "messenger" ? "Sending…" : "Send order on Messenger"}
+              Pickup
             </button>
           </div>
-        </form>
+        </div>
+
+        <div className="option-group">
+          <p className="option-label">Payment</p>
+          <div className="fulfillment-toggle">
+            <button
+              type="button"
+              className={`fulfillment-option ${payment === "cod" ? "selected" : ""}`}
+              onClick={() => setPayment("cod")}
+            >
+              Cash on delivery
+            </button>
+            <button
+              type="button"
+              className={`fulfillment-option ${payment === "bank" ? "selected" : ""}`}
+              onClick={() => setPayment("bank")}
+            >
+              Bank transfer
+            </button>
+          </div>
+        </div>
+
+        <label className="checkout-field">
+          <span className="option-label">Full name</span>
+          <input
+            type="text"
+            className="track-input"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            placeholder="Your name"
+          />
+        </label>
+
+        <label className="checkout-field">
+          <span className="option-label">Phone number</span>
+          <input
+            type="tel"
+            className="track-input"
+            value={phone}
+            onChange={(e) => setPhone(e.target.value)}
+            placeholder="e.g. 971 50 123 4567"
+          />
+        </label>
+
+        {type === "delivery" && (
+          <>
+            <label className="checkout-field">
+              <span className="option-label">Area in Dubai</span>
+              <select className="track-input" value={area} onChange={(e) => setArea(e.target.value)}>
+                <option value="">Select an area</option>
+                {DUBAI_AREAS.map((a) => (
+                  <option key={a} value={a}>
+                    {a}
+                  </option>
+                ))}
+              </select>
+            </label>
+
+            <label className="checkout-field">
+              <span className="option-label">Building / villa name &amp; no.</span>
+              <input
+                type="text"
+                className="track-input"
+                value={building}
+                onChange={(e) => setBuilding(e.target.value)}
+                placeholder="e.g. Marina Heights Tower, Villa 12"
+              />
+            </label>
+
+            <label className="checkout-field">
+              <span className="option-label">Street</span>
+              <input
+                type="text"
+                className="track-input"
+                value={street}
+                onChange={(e) => setStreet(e.target.value)}
+                placeholder="Street / zone"
+              />
+            </label>
+
+            <label className="checkout-field">
+              <span className="option-label">Apartment / floor / unit (optional)</span>
+              <input
+                type="text"
+                className="track-input"
+                value={apartment}
+                onChange={(e) => setApartment(e.target.value)}
+                placeholder="e.g. Apt 1204, 12th floor"
+              />
+            </label>
+
+            <label className="checkout-field">
+              <span className="option-label">Nearest landmark (optional)</span>
+              <input
+                type="text"
+                className="track-input"
+                value={landmark}
+                onChange={(e) => setLandmark(e.target.value)}
+                placeholder="e.g. Near Marina Mall"
+              />
+            </label>
+          </>
+        )}
+
+        {error && <p className="track-error">{error}</p>}
 
         <div className="checkout-summary">
           <p className="option-label" style={{ marginBottom: 12 }}>
@@ -350,7 +346,7 @@ export default function CheckoutPage() {
               </span>
             </div>
           ))}
-          <p className="checkout-price-note">Price to be confirmed on WhatsApp</p>
+          <p className="checkout-price-note">Price to be confirmed with us</p>
           {unmetMinimums.map((u) => (
             <p className="checkout-min-qty-notice" key={u.handle}>
               Pick {u.required - u.have} more different size/style of {u.productTitle} — it needs at
@@ -358,7 +354,41 @@ export default function CheckoutPage() {
             </p>
           ))}
         </div>
-      </div>
+
+        <div className="checkout-send-row">
+          <button type="submit" className="checkout-btn" disabled={Boolean(sendingVia)} style={{ marginTop: 8 }}>
+            {sendingVia === "whatsapp" ? "Sending…" : "Send order on WhatsApp"}
+          </button>
+          <button
+            type="button"
+            className="checkout-btn checkout-btn-secondary"
+            disabled={Boolean(sendingVia)}
+            onClick={() => handleSend("messenger")}
+          >
+            {sendingVia === "messenger" ? "Sending…" : "Send order on Messenger"}
+          </button>
+        </div>
+      </form>
+
+      {messengerConfirm && (
+        <div className="messenger-confirm-overlay" onClick={cancelMessenger}>
+          <div className="messenger-confirm-box" onClick={(e) => e.stopPropagation()}>
+            <p>
+              {messengerConfirm.copied
+                ? "Your order details have been copied."
+                : "Couldn't copy your order automatically — just tell us what you'd like to order."}
+            </p>
+            {messengerConfirm.copied && (
+              <p className="messenger-confirm-hint">
+                In the Messenger chat, tap the message box, Paste, then hit Send.
+              </p>
+            )}
+            <button type="button" className="btn-primary" onClick={confirmMessenger}>
+              Continue to Messenger
+            </button>
+          </div>
+        </div>
+      )}
     </main>
   );
 }
