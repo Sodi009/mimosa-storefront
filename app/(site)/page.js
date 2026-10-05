@@ -13,10 +13,24 @@ const CATEGORIES = [
     ),
   },
   {
-    name: "Clothes",
-    handle: "clothes",
+    name: "Tops",
+    handle: "tops",
     icon: (
       <path d="M8 4 4 7l2 3 2-1v11h8V9l2 1 2-3-4-3-2 2h-2L8 4Z" />
+    ),
+  },
+  {
+    name: "Dresses",
+    handle: "dresses",
+    icon: (
+      <path d="M9 3h6l1 3-2 1 4 13H6l4-13-2-1 1-3Z M10 3l2 2 2-2" />
+    ),
+  },
+  {
+    name: "Bottoms",
+    handle: "bottoms",
+    icon: (
+      <path d="M7 3h10L17 21H13L13 6H11L11 21H7Z" />
     ),
   },
   {
@@ -38,6 +52,55 @@ const CATEGORIES = [
     handle: "accessories",
     icon: (
       <path d="M12 2v4M12 18v4M4.9 4.9l2.8 2.8M16.3 16.3l2.8 2.8M2 12h4M18 12h4M4.9 19.1l2.8-2.8M16.3 7.7l2.8-2.8" />
+    ),
+  },
+  {
+    name: "Supplements",
+    handle: "supplements",
+    icon: (
+      <path d="M8.3 15.7 15.7 8.3a3.3 3.3 0 1 1 4.7 4.7l-7.4 7.4a3.3 3.3 0 1 1-4.7-4.7Z M10.8 10.8l3.1 3.1" />
+    ),
+  },
+  {
+    name: "Beauty & Cosmetic",
+    handle: "beauty-cosmetics",
+    icon: (
+      <path d="M9 2h6l-1 6-2 2-2-2-1-6Z M10 10h4v10a2 2 0 0 1-2 2 2 2 0 0 1-2-2V10Z" />
+    ),
+  },
+  {
+    name: "Hair Tools",
+    handle: "hair-tools",
+    icon: (
+      <path d="M6 5a2 2 0 1 0 0 4 2 2 0 0 0 0-4Z M6 15a2 2 0 1 0 0 4 2 2 0 0 0 0-4Z M7.5 8.3 19 19 M7.5 15.7 19 5" />
+    ),
+  },
+  {
+    name: "Foods",
+    handle: "foods",
+    icon: (
+      <path d="M5 2v7a2 2 0 0 0 2 2v11 M5 2v6 M8 2v6 M11 2v7a2 2 0 0 1-2 2 M17 2c-2.5 1-4 3.5-4 6.5 0 2.3 1.3 3.8 3 4.3V21" />
+    ),
+  },
+  {
+    name: "Contact Lens and Glasses",
+    handle: "contact-lens-glasses",
+    icon: (
+      <path d="M2 13a4 4 0 1 0 8 0 4 4 0 0 0-8 0Z M14 13a4 4 0 1 0 8 0 4 4 0 0 0-8 0Z M10 12h4 M1 11l1.5-4 M23 11l-1.5-4" />
+    ),
+  },
+  {
+    name: "Sister Hood Bar",
+    handle: "sister-hood-bar",
+    icon: (
+      <path d="M12 2.5 14.2 8.8 21 9l-5.4 4.4L17.6 20 12 16.3 6.4 20l2-6.6L3 9l6.8-.2 2.2-6.3Z" />
+    ),
+  },
+  {
+    name: "Wallet",
+    handle: "wallet",
+    icon: (
+      <path d="M3 7a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7Z M15.5 11h3a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1h-3a2 2 0 0 1 0-4Z" />
     ),
   },
 ];

@@ -8,10 +8,19 @@ import { compressImage } from "@/lib/compress-image";
 
 const CATEGORIES = [
   { value: "bags", label: "Bags" },
-  { value: "clothes", label: "Clothes" },
+  { value: "tops", label: "Tops" },
+  { value: "dresses", label: "Dresses" },
+  { value: "bottoms", label: "Bottoms" },
   { value: "innerwear", label: "Innerwears" },
   { value: "shoes", label: "Shoes" },
   { value: "accessories", label: "Accessories" },
+  { value: "supplements", label: "Supplements" },
+  { value: "beauty-cosmetics", label: "Beauty & Cosmetic" },
+  { value: "hair-tools", label: "Hair Tools" },
+  { value: "foods", label: "Foods" },
+  { value: "contact-lens-glasses", label: "Contact Lens and Glasses" },
+  { value: "sister-hood-bar", label: "Sister Hood Bar" },
+  { value: "wallet", label: "Wallet" },
 ];
 
 function parseValues(str) {

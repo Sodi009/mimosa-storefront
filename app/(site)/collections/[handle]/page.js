@@ -1,14 +1,24 @@
-import { getProducts, getProductsByCategory, CATEGORIES } from "@/lib/products";
+import { getProducts, getProductsByCategory, getInStockProducts, CATEGORIES } from "@/lib/products";
 import ProductCard from "@/components/ProductCard";
 
 const FILTER_CATEGORIES = [
   { name: "All", handle: "all" },
   { name: "New In", handle: "new" },
+  { name: "Instock items", handle: "instock" },
   { name: "Bags", handle: "bags" },
-  { name: "Clothes", handle: "clothes" },
+  { name: "Tops", handle: "tops" },
+  { name: "Dresses", handle: "dresses" },
+  { name: "Bottoms", handle: "bottoms" },
   { name: "Innerwears", handle: "innerwear" },
   { name: "Shoes", handle: "shoes" },
   { name: "Accessories", handle: "accessories" },
+  { name: "Supplements", handle: "supplements" },
+  { name: "Beauty & Cosmetic", handle: "beauty-cosmetics" },
+  { name: "Hair Tools", handle: "hair-tools" },
+  { name: "Foods", handle: "foods" },
+  { name: "Contact Lens and Glasses", handle: "contact-lens-glasses" },
+  { name: "Sister Hood Bar", handle: "sister-hood-bar" },
+  { name: "Wallet", handle: "wallet" },
 ];
 
 export default async function CollectionPage({ params }) {
@@ -22,6 +32,9 @@ export default async function CollectionPage({ params }) {
   } else if (handle === "new") {
     title = "New in";
     products = await getProducts({ first: 24 });
+  } else if (handle === "instock") {
+    title = "Instock items";
+    products = await getInStockProducts({ first: 48 });
   } else if (CATEGORIES.includes(handle)) {
     title = FILTER_CATEGORIES.find((cat) => cat.handle === handle)?.name
       || handle.charAt(0).toUpperCase() + handle.slice(1);
