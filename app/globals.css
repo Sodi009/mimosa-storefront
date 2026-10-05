@@ -1410,7 +1410,7 @@ button {
 
 .checkout-topbar {
   border-bottom: 1px solid var(--line);
-  padding: 16px 0;
+  padding: 12px 0;
 }
 
 .checkout-back-btn {
@@ -1429,7 +1429,7 @@ button {
 }
 
 .checkout-page {
-  padding-top: 32px;
+  padding-top: 16px;
   padding-bottom: 80px;
 }
 

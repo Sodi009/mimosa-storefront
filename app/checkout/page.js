@@ -49,7 +49,7 @@ export default function CheckoutPage() {
   if (lines.length === 0) {
     return (
       <main className="wrap checkout-page">
-        <div className="section-head" style={{ paddingBottom: 8 }}>
+        <div className="section-head" style={{ paddingTop: 20, paddingBottom: 8 }}>
           <h2>Checkout</h2>
         </div>
         <p style={{ color: "var(--muted)" }}>Your cart is empty.</p>
@@ -154,7 +154,7 @@ export default function CheckoutPage() {
 
   return (
     <main className="wrap checkout-page">
-      <div className="section-head" style={{ paddingBottom: 8 }}>
+      <div className="section-head" style={{ paddingTop: 20, paddingBottom: 8 }}>
         <h2>Checkout</h2>
       </div>
       <p style={{ color: "var(--muted)", marginTop: 0, marginBottom: 28, maxWidth: "46ch" }}>
