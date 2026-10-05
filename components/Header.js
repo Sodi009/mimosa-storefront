@@ -32,6 +32,7 @@ export default function Header() {
           <Link href="/collections/all">Shop</Link>
           <Link href="/collections/new">New In</Link>
           <Link href="/track">Track Order</Link>
+          <Link href="/guide">Guide</Link>
         </nav>
         <div className="header-actions">
           <div className="header-social-group">
