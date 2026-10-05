@@ -1,7 +1,5 @@
 import { getProductByHandle, getRelatedProducts } from "@/lib/products";
-import { getProductReviews } from "@/lib/reviews";
 import ProductDetail from "@/components/ProductDetail";
-import ProductReviews from "@/components/ProductReviews";
 import ProductCard from "@/components/ProductCard";
 
 export default async function ProductPage({ params }) {
@@ -16,18 +14,13 @@ export default async function ProductPage({ params }) {
     );
   }
 
-  const [reviews, related] = await Promise.all([
-    getProductReviews(product.id),
-    getRelatedProducts(product.category, product.id),
-  ]);
+  const related = await getRelatedProducts(product.category, product.id);
 
   return (
     <main className="wrap">
       <div className="pdp">
         <ProductDetail product={product} />
       </div>
-
-      <ProductReviews productId={product.id} initialReviews={reviews} />
 
       {related.length > 0 && (
         <>
