@@ -304,11 +304,15 @@ button {
     font-size: 15px;
   }
 
-  /* The bottom tab bar covers Home/Shop/Track on mobile now, so the
-     hamburger menu is redundant — and its dropdown used to render under
-     the bottom nav's stacking context, letting the bar bleed through on
-     top of it. Simplest fix is to drop the hamburger here entirely. */
+  /* The bottom tab bar covers Home/Shop/Track/Bag on mobile now, so both
+     the hamburger menu and the header's own cart icon are redundant —
+     the hamburger's dropdown also used to render under the bottom nav's
+     stacking context, letting the bar bleed through on top of it. */
   .menu-toggle {
+    display: none;
+  }
+
+  .cart-toggle-wrap {
     display: none;
   }
 }
