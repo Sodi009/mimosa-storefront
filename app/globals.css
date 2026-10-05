@@ -697,16 +697,10 @@ button {
 
 /* ---------- Category menu (button + dropdown) ---------- */
 
-.filter-menu-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-bottom: 24px;
-}
-
 .category-menu {
   position: relative;
   display: inline-block;
+  margin-bottom: 24px;
 }
 
 .category-menu-btn {
@@ -758,17 +752,6 @@ button {
 .category-menu-item.selected {
   background: var(--ink);
   color: var(--bg);
-}
-
-.sort-menu-panel {
-  grid-template-columns: 1fr;
-  width: min(240px, 80vw);
-}
-
-.sort-menu-divider {
-  border-top: 1px solid var(--line);
-  margin-top: 4px;
-  padding-top: 10px;
 }
 
 /* ---------- Product grid ---------- */
