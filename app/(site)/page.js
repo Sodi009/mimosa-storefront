@@ -190,12 +190,6 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <a href="/collections/new" className="promo-banner">
-        <span className="promo-banner-tag">New In</span>
-        <span className="promo-banner-text">Fresh arrivals every week — tap to see what just landed</span>
-        <span className="promo-banner-arrow">→</span>
-      </a>
-
       <div className="section-head">
         <h2>Shop by category</h2>
       </div>

@@ -6,7 +6,6 @@
   --line: #e4ddd0;
   --sage: #5c7a5e;
   --sale: #d0393f;
-  --sale-bg: #fbe9e9;
   --font-display: "Playfair Display", Georgia, serif;
   --font-body: "Inter", -apple-system, sans-serif;
 
@@ -488,50 +487,6 @@ button {
   .hero-image {
     max-width: 320px;
     margin: 0 auto;
-  }
-}
-
-/* ---------- Promo banner ---------- */
-
-.promo-banner {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin: 24px 0;
-  padding: 14px 20px;
-  border-radius: 14px;
-  background: var(--sale-bg);
-  border: 1px solid var(--sale);
-  color: var(--ink);
-}
-
-.promo-banner-tag {
-  flex-shrink: 0;
-  background: var(--sale);
-  color: #fff;
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  padding: 4px 10px;
-  border-radius: 999px;
-}
-
-.promo-banner-text {
-  flex: 1;
-  font-size: 14px;
-  font-weight: 600;
-}
-
-.promo-banner-arrow {
-  flex-shrink: 0;
-  color: var(--sale);
-  font-size: 18px;
-}
-
-@media (max-width: 600px) {
-  .promo-banner-text {
-    font-size: 13px;
   }
 }
 
