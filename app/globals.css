@@ -343,14 +343,14 @@ button {
 
 @media (max-width: 700px) {
   body {
-    padding-bottom: 86px;
+    padding-bottom: 76px;
   }
 
   .bottom-nav {
     display: flex;
     position: fixed;
     left: 50%;
-    bottom: calc(14px + env(safe-area-inset-bottom));
+    bottom: calc(4px + env(safe-area-inset-bottom));
     transform: translateX(-50%);
     z-index: 45;
     justify-content: center;
