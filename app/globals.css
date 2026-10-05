@@ -683,6 +683,65 @@ button {
   color: var(--bg);
 }
 
+/* ---------- Category menu (button + dropdown) ---------- */
+
+.category-menu {
+  position: relative;
+  display: inline-block;
+  margin-bottom: 16px;
+}
+
+.category-menu-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid var(--glass-border);
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur-sm);
+  -webkit-backdrop-filter: var(--glass-blur-sm);
+  border-radius: 999px;
+  padding: 10px 18px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.category-menu-panel {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  z-index: 46;
+  width: min(460px, 86vw);
+  max-height: 60vh;
+  overflow-y: auto;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 4px;
+  padding: 10px;
+  /* Solid, not glass: this overlays scrolling product-grid content below it. */
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  box-shadow: 0 16px 40px rgba(28, 26, 23, 0.14);
+}
+
+.category-menu-item {
+  padding: 10px 12px;
+  border-radius: 10px;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.category-menu-item:hover {
+  background: var(--line);
+  color: var(--ink);
+}
+
+.category-menu-item.selected {
+  background: var(--ink);
+  color: var(--bg);
+}
+
 /* ---------- Product grid ---------- */
 
 .product-grid {

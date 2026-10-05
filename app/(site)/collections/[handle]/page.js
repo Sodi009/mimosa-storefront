@@ -1,5 +1,6 @@
 import { getProducts, getProductsByCategory, getInStockProducts, CATEGORIES } from "@/lib/products";
 import ProductCard from "@/components/ProductCard";
+import CategoryFilterMenu from "@/components/CategoryFilterMenu";
 
 const FILTER_CATEGORIES = [
   { name: "All", handle: "all" },
@@ -83,17 +84,7 @@ export default async function CollectionPage({ params, searchParams }) {
       <div className="section-head">
         <h2>{title}</h2>
       </div>
-      <div className="category-filter">
-        {FILTER_CATEGORIES.map((cat) => (
-          <a
-            key={cat.handle}
-            href={`/collections/${cat.handle}`}
-            className={`category-filter-pill ${handle === cat.handle ? "selected" : ""}`}
-          >
-            {cat.name}
-          </a>
-        ))}
-      </div>
+      <CategoryFilterMenu categories={FILTER_CATEGORIES} current={handle} />
       <div className="category-filter" style={{ paddingBottom: 24 }}>
         {SORT_OPTIONS.map((opt) => (
           <a
