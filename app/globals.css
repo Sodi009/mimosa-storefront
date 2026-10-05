@@ -349,14 +349,20 @@ button {
   .bottom-nav {
     display: flex;
     position: fixed;
-    left: 50%;
+    left: 0;
+    right: 0;
+    margin-left: auto;
+    margin-right: auto;
+    width: max-content;
     bottom: calc(4px + env(safe-area-inset-bottom));
-    /* translate3d instead of translateX forces this onto its own GPU
-       layer — plain translateX/position:fixed can flicker or vanish
-       mid-scroll on iOS Safari otherwise. */
-    transform: translate3d(-50%, 0, 0);
-    -webkit-backface-visibility: hidden;
+    /* No transform used for centering on purpose — the build's CSS
+       minifier was simplifying translate3d(-50%,0,0) down to a plain
+       translate(-50%), which silently undid the GPU-layer hint that
+       was meant to stop this from flickering mid-scroll on iOS Safari.
+       will-change: transform alone (with no transform to "simplify")
+       survives minification and is enough to force the new layer. */
     will-change: transform;
+    -webkit-backface-visibility: hidden;
     z-index: 45;
     justify-content: center;
     align-items: center;
