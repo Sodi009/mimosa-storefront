@@ -25,6 +25,7 @@ export default function ProductDetail({ product }) {
     return initial;
   });
   const [qty, setQty] = useState(1);
+  const [showSizeGuide, setShowSizeGuide] = useState(false);
 
   const selectedVariant = useMemo(
     () => variants.find((v) => variantMatchesSelection(v, selected)),
@@ -97,6 +98,21 @@ export default function ProductDetail({ product }) {
               </div>
             </div>
           ))}
+
+        {product.sizeGuideUrl && (
+          <div className="pdp-size-guide">
+            <button
+              type="button"
+              className="pdp-size-guide-toggle"
+              onClick={() => setShowSizeGuide((v) => !v)}
+            >
+              Size guide {showSizeGuide ? "−" : "+"}
+            </button>
+            {showSizeGuide && (
+              <img className="pdp-size-guide-img" src={product.sizeGuideUrl} alt="Size guide" />
+            )}
+          </div>
+        )}
 
         {product.description && <p className="pdp-description">{product.description}</p>}
 

@@ -94,6 +94,8 @@ export default function ProductForm({ product }) {
 
   const [variantValues, setVariantValues] = useState(() => initVariantsFromProduct(product));
   const [optionImageMap, setOptionImageMap] = useState(() => initOptionImageMap(product));
+  const [sizeGuideUrl, setSizeGuideUrl] = useState(product?.size_guide_url || "");
+  const [uploadingSizeGuide, setUploadingSizeGuide] = useState(false);
 
   // The rough price shown to customers (e.g. "Around AED 25 – 30") — not
   // tied to any one size/style. The exact price is confirmed with the
@@ -146,6 +148,27 @@ export default function ProductForm({ product }) {
     setImages((prev) => prev.filter((img) => img.url !== url));
   }
 
+  async function handleSizeGuideFile(e) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setUploadingSizeGuide(true);
+    setFormError("");
+    try {
+      const compressed = await compressImage(file);
+      const { path, token, publicUrl } = await getUploadUrl(compressed.name);
+      const { error } = await supabasePublic.storage
+        .from("product-images")
+        .uploadToSignedUrl(path, token, compressed);
+      if (error) throw new Error(error.message);
+      setSizeGuideUrl(publicUrl);
+    } catch (err) {
+      setFormError(`Size guide upload failed: ${err.message}`);
+    } finally {
+      setUploadingSizeGuide(false);
+      e.target.value = "";
+    }
+  }
+
   function moveImageFirst(url) {
     setImages((prev) => {
       const img = prev.find((i) => i.url === url);
@@ -196,6 +219,7 @@ export default function ProductForm({ product }) {
     fd.set("priceFrom", String(from));
     fd.set("priceTo", to > from ? String(to) : "");
     fd.set("images", JSON.stringify(images));
+    fd.set("sizeGuideUrl", sizeGuideUrl || "");
     fd.set("options", JSON.stringify(options));
     fd.set("variants", JSON.stringify(variants));
 
@@ -348,6 +372,24 @@ export default function ProductForm({ product }) {
         {!opt1Values.length && (
           <p className="admin-section-hint">Fill in "First choice" above before adding a second one.</p>
         )}
+      </div>
+
+      <div className="admin-field">
+        <span>Size guide photo (optional)</span>
+        {sizeGuideUrl ? (
+          <div className="admin-image-thumb">
+            <img src={sizeGuideUrl} alt="" />
+            <div className="admin-image-thumb-actions">
+              <button type="button" onClick={() => setSizeGuideUrl("")}>Remove</button>
+            </div>
+          </div>
+        ) : (
+          <input type="file" accept="image/*" onChange={handleSizeGuideFile} disabled={uploadingSizeGuide} />
+        )}
+        {uploadingSizeGuide && <p className="admin-uploading">Uploading…</p>}
+        <p className="admin-section-hint" style={{ margin: "4px 0 0" }}>
+          Shown to customers right under the size/style selector on the product page.
+        </p>
       </div>
 
       {opt1Values.length > 0 && images.length > 0 && (

@@ -98,6 +98,7 @@ export async function saveProductAction(formData) {
   const priceFrom = Number(formData.get("priceFrom"));
   const priceToRaw = formData.get("priceTo");
   const priceTo = priceToRaw ? Number(priceToRaw) : null;
+  const sizeGuideUrl = String(formData.get("sizeGuideUrl") || "").trim() || null;
 
   if (!title) throw new Error("Title is required");
   if (!variants.length) throw new Error("At least one variant is required");
@@ -115,6 +116,7 @@ export async function saveProductAction(formData) {
     min_quantity: minQuantity,
     price_from: priceFrom,
     price_to: priceTo,
+    size_guide_url: sizeGuideUrl,
   };
 
   let productId = id;
